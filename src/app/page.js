@@ -14,17 +14,17 @@ const Home = () => {
         <div className="fixed inset-0 -z-10 bg-black" />
       )}
       
-      <div className="container mx-auto px-6 py-16 relative z-10">
-        <h1 className="text-4xl font-black text-left mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500">
-          algoview.app
+      <div className="container font-mono mx-auto px-6 py-16 2xl:py-24 relative z-10">
+        <h1 className="text-4xl  lg:text-5xl lg:font-black font-bold text-left md:text-center mb-4 lg:mb-8 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500">
+          Algoview.app
         </h1>
         
-        <p className="text-left text-gray-300 max-w-2xl mx-auto mb-12">
-          Explore and visualize algorithms through interactive animations. 
-          Understand complex concepts with our intuitive visualization tools.
+        <p className="text-left text-gray-300  mx-auto mb-12 xl:mb-16 xl:text-left max-w-readable leading-normal">
+          Explore and visualize algorithms through interactive animations. Even an elementary school student can understand complex concepts with our intuitive visualization tools.
+          The animation are aimed to be make complex concepts easy to understand. It's free and open source.
         </p>
 
-        <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto mb-12">
+        <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto justify-center mb-12  ">
           <AlgorithmCard
             title="Sorting Visualizer"
             description="Watch how different sorting algorithms organize data in real-time"
