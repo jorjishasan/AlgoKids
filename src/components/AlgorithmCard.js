@@ -55,7 +55,7 @@ const AlgorithmCard = ({
     >
       <div
         ref={cardRef}
-        className="group relative w-80 h-48 bg-white/30 backdrop-blur-md rounded-lg shadow-lg overflow-hidden"
+        className="group w-full relative h-auto bg-white/30 backdrop-blur-md rounded-lg shadow-lg overflow-hidden"
       >
         <div className="absolute inset-px z-10 rounded-lg bg-black/90" />
         
