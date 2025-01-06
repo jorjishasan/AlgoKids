@@ -52,21 +52,22 @@ const AlgorithmCard = ({
       animate="visible"
       whileHover="hover"
       variants={cardVariants}
+      className="h-full"
     >
       <div
         ref={cardRef}
-        className="group w-full relative h-auto bg-white/30 backdrop-blur-md rounded-lg shadow-lg overflow-hidden"
+        className="group relative h-full bg-white/30 backdrop-blur-md rounded-lg shadow-lg overflow-hidden"
       >
         <div className="absolute inset-px z-10 rounded-lg bg-black/90" />
         
-        <div className="relative z-30 flex flex-col p-6">
+        <div className="relative z-30 flex flex-col h-full p-6">
           <motion.div variants={iconVariants}>
             {getIcon(title)}
           </motion.div>
           <h3 className="text-xl font-bold bg-gradient-to-br from-white to-gray-400 bg-clip-text text-transparent mb-2">
             {title}
           </h3>
-          <p className="text-gray-400 text-sm flex-grow">
+          <p className="text-gray-400 text-sm">
             {description}
           </p>
         </div>
