@@ -5,6 +5,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 const Background3D = () => {
   const containerRef = useRef();
+  console.log("Background3D rendered");
 
   useEffect(() => {
     const scene = new THREE.Scene();
