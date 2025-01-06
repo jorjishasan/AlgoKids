@@ -19,12 +19,12 @@ const Home = () => {
           Algoview.app
         </h1>
         
-        <p className="text-left text-gray-300  mx-auto mb-12 xl:mb-16 xl:text-left max-w-readable leading-normal">
+        <p className="text-left text-gray-300 mx-auto mb-12 xl:mb-16 xl:text-left max-w-[65ch] leading-normal">
           Explore and visualize algorithms through interactive animations. Even an elementary school student can understand complex concepts with our intuitive visualization tools.
           The animation are aimed to be make complex concepts easy to understand. It's free and open source.
         </p>
 
-        <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto justify-center mb-12  ">
+        <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto justify-center mb-12 grid-flow-row-dense">
           <AlgorithmCard
             title="Sorting Visualizer"
             description="Watch how different sorting algorithms organize data in real-time"
