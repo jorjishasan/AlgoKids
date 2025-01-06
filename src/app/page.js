@@ -1,13 +1,21 @@
+"use client"
+import { useDevice } from '@/context/DeviceContext';
 import Background3D from '../components/Background3D'
 import AlgorithmCard from '../components/AlgorithmCard'
 
 const Home = () => {
+  const { isMobile } = useDevice();
+
   return (
     <main className="min-h-screen relative">
-      <Background3D />
+      {!isMobile ? (
+        <Background3D />
+      ) : (
+        <div className="fixed inset-0 -z-10 bg-black" />
+      )}
       
       <div className="container mx-auto px-6 py-16 relative z-10">
-        <h1 className="text-4xl  font-black text-left mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500">
+        <h1 className="text-4xl font-black text-left mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500">
           algoview.app
         </h1>
         
