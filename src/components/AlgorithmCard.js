@@ -25,11 +25,11 @@ const AlgorithmCard = ({
       }
     },
     hover: { 
-      scale: 1.03,
+      y: -8,
       transition: {
         type: "spring",
-        stiffness: 300,
-        damping: 10
+        stiffness: 400,
+        damping: 17
       }
     }
   };
@@ -37,10 +37,11 @@ const AlgorithmCard = ({
   const iconVariants = {
     hover: {
       scale: 1.1,
+      rotate: 5,
       transition: {
         type: "spring",
-        stiffness: 300,
-        damping: 10
+        stiffness: 400,
+        damping: 17
       }
     }
   };
@@ -56,7 +57,7 @@ const AlgorithmCard = ({
     >
       <div
         ref={cardRef}
-        className="h-full p-6 bg-black/90 border border-gray-700 rounded-lg"
+        className="h-full p-6 bg-black/90 border border-gray-700 rounded-lg transition-shadow duration-300 hover:shadow-lg hover:shadow-blue-500/10"
       >
         <div className="flex flex-col h-full">
           <motion.div variants={iconVariants}>
