@@ -1,5 +1,6 @@
 "use client"
 import CaretDown from '@/components/icons/CaretDown';
+import { sortingAlgorithmConfig } from '@/config/algorithmConfig';
 
 const Controls = ({ createArray, setSpeed, isRunning }) => {
   return (
@@ -14,9 +15,9 @@ const Controls = ({ createArray, setSpeed, isRunning }) => {
             <label className="block text-sm text-gray-300 mb-2">Array Size</label>
             <input
               type="range"
-              min="2"
-              max={Math.floor(window.screen.width/50)}
-              defaultValue={Math.floor((window.screen.width/50)/2)}
+              min={sortingAlgorithmConfig.array.minSize}
+              max={sortingAlgorithmConfig.array.maxSize}
+              defaultValue={sortingAlgorithmConfig.array.defaultSize}
               onChange={(e) => createArray(Number(e.target.value))}
               disabled={isRunning}
               className="w-full"
@@ -26,10 +27,11 @@ const Controls = ({ createArray, setSpeed, isRunning }) => {
             <label className="block text-sm text-gray-300 mb-2">Speed</label>
             <input
               type="range"
-              min="100"
-              max="1000"
-              defaultValue="500"
-              onChange={(e) => setSpeed(1100 - Number(e.target.value))}
+              min={sortingAlgorithmConfig.speed.min}
+              max={sortingAlgorithmConfig.speed.max}
+              step={sortingAlgorithmConfig.speed.step}
+              defaultValue={sortingAlgorithmConfig.speed.default}
+              onChange={(e) => setSpeed(sortingAlgorithmConfig.speed.max + sortingAlgorithmConfig.speed.min - Number(e.target.value))}
               disabled={isRunning}
               className="w-full"
             />
