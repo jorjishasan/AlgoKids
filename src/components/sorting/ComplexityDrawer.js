@@ -11,27 +11,39 @@ const ComplexityDrawer = () => {
       <button
         onClick={toggleComplexity}
         disabled={isRunning}
-        className="fixed bottom-10 right-8 group lg:bottom-24 lg:right-4"
+        className="fixed bottom-16 right-6 group"
       >
         <motion.div 
-          className="absolute inset-0 bg-gray-400/20 rounded-full group-hover:bg-gray-400/30
-            transition-colors duration-300"
+          className="absolute inset-0 bg-gray-400/20 rounded-full"
           animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.5, 0.3, 0.5]
+            scale: [1, 1.4, 1],
+            opacity: [0.25, 0.15, 0.25]
           }}
           transition={{
             repeat: Infinity,
-            duration: 2,
+            duration: 1.5,
             ease: "easeInOut"
           }}
         />
-        <div className="relative p-2 bg-gray-800/80 backdrop-blur-sm rounded-full 
+        <motion.div 
+          className="absolute inset-0 bg-gray-400/20 rounded-full"
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.3, 0.2, 0.3]
+          }}
+          transition={{
+            repeat: Infinity,
+            duration: 1.5,
+            ease: "easeInOut",
+            delay: 0.2
+          }}
+        />
+        <div className="relative p-3 bg-gray-800/80 backdrop-blur-sm rounded-full 
           border border-gray-500/20 shadow-lg shadow-gray-500/10
           group-hover:border-gray-500/30 transition-all duration-300"
         >
           <svg
-            className="w-7 h-7 text-white"
+            className="w-6 h-6 lg:w-9 lg:h-9 text-white"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="currentColor"
@@ -49,7 +61,7 @@ const ComplexityDrawer = () => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={toggleComplexity}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
+              className="fixed inset-0  bg-black/50 backdrop-blur-sm z-40"
             />
 
             <motion.div
@@ -86,7 +98,7 @@ const ComplexityDrawer = () => {
                 </svg>
               </button>
 
-              <div className="px-4 pb-8 overflow-y-auto max-h-[calc(85vh-80px)]">
+              <div className="px-6 lg:px-8 lg:pb-8 pb-6 overflow-y-auto max-h-[calc(85vh-80px)]">
                 <ComplexityInfo algorithm={method} />
               </div>
             </motion.div>
