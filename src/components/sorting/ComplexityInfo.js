@@ -50,34 +50,34 @@ const ComplexityInfo = ({ algorithm }) => {
   if (!info) return null;
 
   return (
-    <div className="bg-gray-800 rounded-lg p-6">
-      <h2 className="text-2xl font-bold mb-4">{info.name}</h2>
-      <p className="text-gray-300 mb-6">{info.description}</p>
+    <div className="w-full">
+      <h2 className="text-xl font-bold mb-3 text-white">{info.name}</h2>
+      <p className="text-gray-300 text-sm mb-6 leading-relaxed">{info.description}</p>
       
       <div className="space-y-6">
         <div>
-          <h3 className="text-lg font-semibold mb-2">Time Complexity</h3>
-          <div className="grid grid-cols-3 gap-4">
-            <div className="bg-gray-700 p-3 rounded">
-              <p className="text-sm text-gray-300">Best Case</p>
-              <p className="text-lg font-mono">{info.timeComplexity.best}</p>
+          <h3 className="text-base font-semibold mb-2 text-white">Time Complexity</h3>
+          <div className="grid grid-cols-3 gap-2">
+            <div className="bg-gray-700/50 p-2 rounded-lg">
+              <p className="text-xs text-gray-400">Best Case</p>
+              <p className="text-sm font-mono text-white">{info.timeComplexity.best}</p>
             </div>
-            <div className="bg-gray-700 p-3 rounded">
-              <p className="text-sm text-gray-300">Average Case</p>
-              <p className="text-lg font-mono">{info.timeComplexity.average}</p>
+            <div className="bg-gray-700/50 p-2 rounded-lg">
+              <p className="text-xs text-gray-400">Average Case</p>
+              <p className="text-sm font-mono text-white">{info.timeComplexity.average}</p>
             </div>
-            <div className="bg-gray-700 p-3 rounded">
-              <p className="text-sm text-gray-300">Worst Case</p>
-              <p className="text-lg font-mono">{info.timeComplexity.worst}</p>
+            <div className="bg-gray-700/50 p-2 rounded-lg">
+              <p className="text-xs text-gray-400">Worst Case</p>
+              <p className="text-sm font-mono text-white">{info.timeComplexity.worst}</p>
             </div>
           </div>
         </div>
         
         <div>
-          <h3 className="text-lg font-semibold mb-2">Space Complexity</h3>
-          <div className="bg-gray-700 p-3 rounded">
-            <p className="text-sm text-gray-300">Auxiliary Space</p>
-            <p className="text-lg font-mono">{info.spaceComplexity}</p>
+          <h3 className="text-base font-semibold mb-2 text-white">Space Complexity</h3>
+          <div className="bg-gray-700/50 p-2 rounded-lg">
+            <p className="text-xs text-gray-400">Auxiliary Space</p>
+            <p className="text-sm font-mono text-white">{info.spaceComplexity}</p>
           </div>
         </div>
       </div>
