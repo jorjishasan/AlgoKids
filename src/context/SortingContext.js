@@ -1,5 +1,6 @@
 "use client"
 import { createContext, useContext, useState, useEffect } from 'react';
+import { sortingAlgorithmConfig } from '@/config/algorithmConfig';
 import { bubbleSort } from '@/lib/algorithms/sorting/bubbleSort';
 import { quickSort } from '@/lib/algorithms/sorting/quickSort';
 import { selectionSort } from '@/lib/algorithms/sorting/selectionSort';
@@ -18,12 +19,12 @@ export const useSorting = () => {
 export const SortingProvider = ({ children }) => {
   const [state, setState] = useState({
     array: [],
-    method: "Quick Sort",
-    arrayLength: 0,
+    method: sortingAlgorithmConfig.algorithms[0],
+    arrayLength: sortingAlgorithmConfig.array.defaultSize,
     comparing: [],
     swapping: [],
     sorted: [],
-    speed: 100,
+    speed: sortingAlgorithmConfig.speed.default,
     isRunning: false,
     showComplexity: false,
     showToast: false
@@ -37,7 +38,7 @@ export const SortingProvider = ({ children }) => {
     return true;
   };
 
-  const createArray = (size = Math.floor(window.innerWidth/50)/2) => {
+  const createArray = (size = sortingAlgorithmConfig.array.defaultSize) => {
     const newArray = Array.from({ length: size }, (_, i) => ({
       value: Math.floor(Math.random() * ((window.innerHeight/4)-30+1)) + 30,
       id: `id-${i}`,
@@ -109,8 +110,8 @@ export const SortingProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    createArray();
-    const handleResize = () => createArray();
+    createArray(sortingAlgorithmConfig.array.defaultSize);
+    const handleResize = () => createArray(sortingAlgorithmConfig.array.defaultSize);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
