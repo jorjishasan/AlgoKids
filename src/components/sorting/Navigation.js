@@ -41,13 +41,6 @@ const Navigation = () => {
               >
                 Home
               </Link>
-              <button 
-                className="text-gray-300 hover:text-white transition-colors"
-                onClick={() => createArray(arrayLength)}
-                disabled={isRunning}
-              >
-                Randomize
-              </button>
 
               <AlgorithmSelector 
                 method={method} 
@@ -63,7 +56,14 @@ const Navigation = () => {
             </div>
           </div>
 
-          <div className="ml-auto flex items-center gap-4">
+          <div className="ml-auto flex items-center gap-2">
+            <button 
+              className="hidden md:block px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors disabled:opacity-50"
+              onClick={() => createArray(arrayLength)}
+              disabled={isRunning}
+            >
+              Shuffle
+            </button>
             <button 
               className="hidden md:block px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors disabled:opacity-50"
               onClick={handleSort}
