@@ -25,8 +25,17 @@ export const SortingProvider = ({ children }) => {
     sorted: [],
     speed: 100,
     isRunning: false,
-    showComplexity: false
+    showComplexity: false,
+    showToast: false
   });
+
+  const isArraySorted = (arr) => {
+    if (!arr.length) return false;
+    for (let i = 0; i < arr.length - 1; i++) {
+      if (arr[i].value > arr[i + 1].value) return false;
+    }
+    return true;
+  };
 
   const createArray = (size = Math.floor(window.innerWidth/50)/2) => {
     const newArray = Array.from({ length: size }, (_, i) => ({
@@ -40,14 +49,20 @@ export const SortingProvider = ({ children }) => {
       arrayLength: size,
       sorted: [],
       comparing: [],
-      swapping: []
+      swapping: [],
+      showToast: false
     }));
   };
 
   const handleSort = async (e) => {
-    e.preventDefault();
-    let results = [];
+    if (e) e.preventDefault();
     
+    if (isArraySorted(state.array) && !state.showToast) {
+      setState(prev => ({ ...prev, showToast: true }));
+      return;
+    }
+    
+    let results = [];
     setState(prev => ({ ...prev, isRunning: true }));
 
     switch (state.method) {
@@ -89,6 +104,10 @@ export const SortingProvider = ({ children }) => {
     setState(prev => ({ ...prev, showComplexity: !prev.showComplexity }));
   };
 
+  const toggleToast = () => {
+    setState(prev => ({ ...prev, showToast: !prev.showToast }));
+  };
+
   useEffect(() => {
     createArray();
     const handleResize = () => createArray();
@@ -101,6 +120,7 @@ export const SortingProvider = ({ children }) => {
     createArray,
     handleSort,
     toggleComplexity,
+    toggleToast,
     setState
   };
 
