@@ -1,10 +1,9 @@
 "use client"
 import { useSorting } from '@/context/SortingContext';
 
-const ComplexityInfo = () => {
-  const { selectedAlgorithm } = useSorting();
+const ComplexityInfo = ({ algorithm }) => {
   const algorithmInfo = {
-    bubble: {
+    'Bubble Sort': {
       name: 'Bubble Sort',
       timeComplexity: {
         best: 'O(n)',
@@ -14,7 +13,7 @@ const ComplexityInfo = () => {
       spaceComplexity: 'O(1)',
       description: 'A simple sorting algorithm that repeatedly steps through the list, compares adjacent elements and swaps them if they are in the wrong order.'
     },
-    quick: {
+    'Quick Sort': {
       name: 'Quick Sort',
       timeComplexity: {
         best: 'O(n log n)',
@@ -24,7 +23,7 @@ const ComplexityInfo = () => {
       spaceComplexity: 'O(log n)',
       description: 'A divide-and-conquer algorithm that works by selecting a pivot element and partitioning the array around it.'
     },
-    merge: {
+    'Merge Sort': {
       name: 'Merge Sort',
       timeComplexity: {
         best: 'O(n log n)',
@@ -34,7 +33,7 @@ const ComplexityInfo = () => {
       spaceComplexity: 'O(n)',
       description: 'A divide-and-conquer algorithm that divides the array into two halves, sorts them, and then merges the sorted halves.'
     },
-    selection: {
+    'Selection Sort': {
       name: 'Selection Sort',
       timeComplexity: {
         best: 'O(n²)',
@@ -46,7 +45,9 @@ const ComplexityInfo = () => {
     }
   };
 
-  const info = algorithmInfo[selectedAlgorithm];
+  const info = algorithmInfo[algorithm];
+
+  if (!info) return null;
 
   return (
     <div className="bg-gray-800 rounded-lg p-6">
