@@ -1,13 +1,16 @@
 "use client"
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 const Background3D = () => {
   const containerRef = useRef();
-  console.log("Background3D rendered");
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
+    if (!isMounted) return;
+
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ 
@@ -103,7 +106,9 @@ const Background3D = () => {
       window.removeEventListener('resize', handleResize);
       containerRef.current?.removeChild(renderer.domElement);
     };
-  }, []);
+  }, [isMounted]);
+
+  if (!isMounted) return null;
 
   return <div ref={containerRef} className="fixed inset-0 -z-10" />;
 };
