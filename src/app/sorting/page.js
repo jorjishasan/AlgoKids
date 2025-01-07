@@ -1,27 +1,8 @@
 "use client"
-import dynamic from 'next/dynamic'
-
-// Dynamically import components that use window/browser APIs
-const SortingVisualizer = dynamic(
-  () => import('@/components/sorting/SortingVisualizer'),
-  { ssr: false }
-)
-
-const Navigation = dynamic(
-  () => import('@/components/sorting/Navigation'),
-  { ssr: false }
-)
-
-const ComplexityDrawer = dynamic(
-  () => import('@/components/sorting/ComplexityDrawer'),
-  { ssr: false }
-)
-
-const Toast = dynamic(
-  () => import('@/components/sorting/Toast'),
-  { ssr: false }
-)
-
+import Navigation from '@/components/sorting/Navigation';
+import SortingVisualizer from '@/components/sorting/SortingVisualizer';
+import ComplexityDrawer from '@/components/sorting/ComplexityDrawer';
+import Toast from '@/components/sorting/Toast';
 import { SortingProvider } from '@/context/SortingContext';
 
 const Sorting = () => {
