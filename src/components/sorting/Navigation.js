@@ -1,10 +1,14 @@
 "use client"
+import { useState } from 'react';
 import Link from 'next/link';
 import { useSorting } from '@/context/SortingContext';
 import AlgorithmSelector from './AlgorithmSelector';
 import Controls from './Controls';
+import HamburgerMenu from './HamburgerMenu';
+import MobileMenu from './MobileMenu';
 
 const Navigation = () => {
+  const [isHamburgerOpen, setIsHamburgerOpen] = useState(false);
   const { 
     method, 
     setState, 
@@ -24,13 +28,13 @@ const Navigation = () => {
   };
 
   return (
-    <nav className="bg-gray-800 shadow-lg">
+    <nav className="relative bg-gray-800 shadow-lg">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center h-16">
           <div className="flex items-center gap-8">
             <h1 className="text-xl font-bold text-white">Sorting</h1>
             
-            <div className="flex items-center gap-6">
+            <div className="hidden md:flex items-center gap-6">
               <Link 
                 href="/"
                 className="text-gray-300 hover:text-white transition-colors"
@@ -59,17 +63,26 @@ const Navigation = () => {
             </div>
           </div>
 
-          <div className="ml-auto">
+          <div className="ml-auto flex items-center gap-4">
             <button 
-              className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors disabled:opacity-50"
+              className="hidden md:block px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 transition-colors disabled:opacity-50"
               onClick={handleSort}
               disabled={isRunning}
             >
               Sort
             </button>
+            <HamburgerMenu 
+              isOpen={isHamburgerOpen} 
+              setIsOpen={setIsHamburgerOpen} 
+            />
           </div>
         </div>
       </div>
+      
+      <MobileMenu 
+        isOpen={isHamburgerOpen} 
+        setIsOpen={setIsHamburgerOpen} 
+      />
     </nav>
   );
 };
