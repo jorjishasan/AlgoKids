@@ -1,10 +1,12 @@
 "use client"
+import CaretDown from '@/components/icons/CaretDown';
 
 const Controls = ({ createArray, setSpeed, isRunning }) => {
   return (
     <div className="relative group">
-      <button className="text-gray-300 hover:text-white transition-colors">
+      <button className="flex items-center gap-1 text-gray-300 hover:text-white transition-colors">
         Controls
+        <CaretDown className="text-gray-300 group-hover:text-white transition-colors" />
       </button>
       <div className="absolute hidden group-hover:block w-64 bg-gray-700 rounded-md shadow-lg p-4">
         <div className="space-y-4">
