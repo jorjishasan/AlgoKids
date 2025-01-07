@@ -11,7 +11,7 @@ const ComplexityDrawer = () => {
       <button
         onClick={toggleComplexity}
         disabled={isRunning}
-        className="fixed bottom-16 right-6 group"
+        className="fixed bottom-16 right-6 lg:bottom-24 lg:right-12  group"
       >
         <motion.div 
           className="absolute inset-0 bg-gray-400/20 rounded-full"
