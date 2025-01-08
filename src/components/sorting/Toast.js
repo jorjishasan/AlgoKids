@@ -12,9 +12,10 @@ const Toast = () => {
           initial={{ opacity: 0, y: 100 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 100, transition: { duration: 0.2 } }}
-          className="fixed left-0 right-0 mx-auto lg:left-1/2 lg:-translate-x-1/2
+          className="fixed bottom-32 md:bottom-24 lg:bottom-auto 
+            left-[calc(50%-180px)]
             bg-gray-900/50 backdrop-blur-md border border-green-500/20
-            rounded-xl p-4 mx-4 w-[calc(100%-32px)] max-w-[360px] z-50
+            rounded-xl p-4 w-[360px] z-50
             shadow-[0_0_15px_rgba(34,197,94,0.1)]"
         >
           <button
@@ -38,13 +39,14 @@ const Toast = () => {
           <div className="flex items-center gap-2">
             <button
               onClick={() => {
-                createArray();
                 toggleToast();
+                createArray();
+                handleSort();
               }}
               className="px-4 py-1.5 text-sm bg-green-500/20 text-green-500 
                 rounded-lg hover:bg-green-500/30 transition-colors duration-200"
             >
-              Shuffle
+              Shuffle & Sort
             </button>
             <button
               onClick={() => {
