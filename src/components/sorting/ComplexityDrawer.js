@@ -11,7 +11,7 @@ const ComplexityDrawer = () => {
       <button
         onClick={toggleComplexity}
         disabled={isRunning}
-        className="fixed bottom-16 right-6 lg:bottom-24 lg:right-12  group"
+        className="fixed bottom-16 left-5 lg:left-auto lg:right-12 lg:bottom-24 group"
       >
         <motion.div 
           className="absolute inset-0 bg-gray-400/20 rounded-full"
@@ -43,7 +43,7 @@ const ComplexityDrawer = () => {
           group-hover:border-gray-500/30 transition-all duration-300"
         >
           <svg
-            className="w-6 h-6 lg:w-9 lg:h-9 text-white"
+            className="w-5 h-5 lg:w-9 lg:h-9 text-gray-300"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="currentColor"
