@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useSorting } from '@/context/SortingContext';
 
 const Toast = () => {
-  const { showToast, toggleToast, createArray, handleSort } = useSorting();
+  const { showToast, toggleToast, handleSort, shuffleArray, createArray } = useSorting();
 
   return (
     <AnimatePresence mode="wait">
@@ -40,8 +40,7 @@ const Toast = () => {
             <button
               onClick={() => {
                 toggleToast();
-                createArray();
-                handleSort();
+                shuffleArray();
               }}
               className="px-4 py-1.5 text-sm bg-green-500/20 text-green-500 
                 rounded-lg hover:bg-green-500/30 transition-colors duration-200"
