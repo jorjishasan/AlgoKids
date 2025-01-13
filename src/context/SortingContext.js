@@ -30,6 +30,9 @@ export const SortingProvider = ({ children }) => {
     showToast: false
   });
 
+  const [shouldSort, setShouldSort] = useState(false);
+  const [isShuffling, setIsShuffling] = useState(false);
+
   const isArraySorted = (arr) => {
     if (!arr.length) return false;
     for (let i = 0; i < arr.length - 1; i++) {
@@ -109,6 +112,36 @@ export const SortingProvider = ({ children }) => {
     setState(prev => ({ ...prev, showToast: !prev.showToast }));
   };
 
+  const shuffleArray = () => {
+    setState(prev => {
+      const shuffledArray = [...prev.array];
+      
+      // Fisher-Yates shuffle
+      for (let i = shuffledArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+      }
+      
+      return {
+        ...prev,
+        array: shuffledArray,
+        sorted: [],
+        comparing: [],
+        swapping: [],
+        showToast: false
+      };
+    });
+    setIsShuffling(true);
+  };
+
+  // Effect to handle sorting after shuffle
+  useEffect(() => {
+    if (isShuffling) {
+      handleSort();
+      setIsShuffling(false);
+    }
+  }, [isShuffling]);
+
   useEffect(() => {
     createArray(sortingAlgorithmConfig.array.defaultSize);
     const handleResize = () => createArray(sortingAlgorithmConfig.array.defaultSize);
@@ -122,7 +155,8 @@ export const SortingProvider = ({ children }) => {
     handleSort,
     toggleComplexity,
     toggleToast,
-    setState
+    setState,
+    shuffleArray
   };
 
   return (
