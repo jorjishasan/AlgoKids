@@ -1,11 +1,13 @@
 "use client";
+import { ConvexHullProvider } from '../../context/ConvexHullContext';
+import ConvexHullVisualizer from '../../components/convexhull/ConvexHullVisualizer';
 
-const ConvexHull = () => {
+const ConvexHullPage = () => {
   return (
-    <div>
-      <h1>Convex Hull</h1>
-    </div>
-  )
-}
+    <ConvexHullProvider>
+      <ConvexHullVisualizer />
+    </ConvexHullProvider>
+  );
+};
 
-export default ConvexHull;
+export default ConvexHullPage;
