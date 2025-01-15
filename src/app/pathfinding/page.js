@@ -1,10 +1,12 @@
 "use client";
+import Pathfinding from '../../components/pathfinding/Pathfinding';
+import { PathfindingProvider } from '../../context/PathfindingContext';
 
 const PathfindingPage = () => {
   return (
-    <div>
-      Pathfinding visualizer
-    </div>
+    <PathfindingProvider>
+      <Pathfinding />
+    </PathfindingProvider>
   );
 };
 
