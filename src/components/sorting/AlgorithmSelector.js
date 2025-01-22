@@ -12,7 +12,7 @@ const AlgorithmSelector = ({ method, setMethod, isRunning }) => {
     className="relative">
       <button
 
-        className="flex items-center gap-1 text-gray-300 hover:text-white transition-colors">
+        className="flex group items-center gap-1 text-gray-300 hover:text-white transition-colors">
         {method}
         <CaretDown  />
       </button>
