@@ -21,7 +21,7 @@ const SortingVisualizer = () => {
             layout
             transition={springAnim}
             className={`
-              w-10 flex items-start pt-2 justify-center text-xs text-white
+              w-10 flex items-start pt-2 justify-center rounded text-xs text-white
               transition-all duration-200 ease-in-out
               ${comparing.includes(index)
                 ? 'bg-yellow-400 scale-105'
