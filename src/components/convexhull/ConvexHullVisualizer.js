@@ -2,7 +2,6 @@
 import { useConvexHull } from '../../context/ConvexHullContext';
 import NavBar from './NavBar';
 import Canvas from './Canvas';
-import { motion } from 'framer-motion';
 
 const ConvexHullVisualizer = () => {
   const { 
@@ -17,20 +16,7 @@ const ConvexHullVisualizer = () => {
   } = useConvexHull();
 
   return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="h-screen overflow-hidden flex flex-col bg-gradient-to-r from-blue-400 via-purple-400 to-blue-400"
-    >
-      {/* Playful gradient overlay */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(255,255,255,0.2),rgba(255,255,255,0))]" />
-      
-      {/* Animated background patterns */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_0%_0%,#fff_1px,transparent_1px)] bg-[length:40px_40px] animate-[pulse_4s_ease-in-out_infinite]" />
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_100%_100%,#fff_1px,transparent_1px)] bg-[length:30px_30px] animate-[pulse_4s_ease-in-out_infinite_1s]" />
-      </div>
-      
+    <div className="min-h-screen bg-[#1A1B1E]">
       <NavBar 
         isAnimating={isAnimating}
         points={points}
@@ -38,7 +24,7 @@ const ConvexHullVisualizer = () => {
         onVisualize={visualizeConvexHull}
         onClear={clearPoints}
       />
-      <div className="flex-1 flex items-start mt-[100px] justify-center relative z-0">
+      <div className="mt-8">
         <Canvas 
           points={points}
           hull={hull}
@@ -47,7 +33,7 @@ const ConvexHullVisualizer = () => {
           onAddPoint={addPoint}
         />
       </div>
-    </motion.div>
+    </div>
   );
 };
 
