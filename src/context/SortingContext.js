@@ -1,167 +1,232 @@
 "use client"
 import { createContext, useContext, useState, useEffect } from 'react';
+import bubbleSort from '@/lib/algorithms/sorting/bubbleSort';
+import selectionSort from '@/lib/algorithms/sorting/selectionSort';
+import insertionSort from '@/lib/algorithms/sorting/insertionSort';
+import mergeSort from '@/lib/algorithms/sorting/mergeSort';
+import quickSort from '@/lib/algorithms/sorting/quickSort';
+import heapSort from '@/lib/algorithms/sorting/heapSort';
+import shellSort from '@/lib/algorithms/sorting/shellSort';
+import cocktailSort from '@/lib/algorithms/sorting/cocktailSort';
 import { sortingAlgorithmConfig } from '@/config/algorithmConfig';
-import { bubbleSort } from '@/lib/algorithms/sorting/bubbleSort';
-import { quickSort } from '@/lib/algorithms/sorting/quickSort';
-import { selectionSort } from '@/lib/algorithms/sorting/selectionSort';
-import { mergeSort } from '@/lib/algorithms/sorting/mergeSort';
 
-const SortingContext = createContext(null);
+const SortingContext = createContext();
 
-export const useSorting = () => {
-  const context = useContext(SortingContext);
-  if (!context) {
-    throw new Error('useSorting must be used within a SortingProvider');
-  }
-  return context;
-};
+export const useSorting = () => useContext(SortingContext);
 
 export const SortingProvider = ({ children }) => {
+  const [mounted, setMounted] = useState(false);
   const [state, setState] = useState({
     array: [],
-    method: sortingAlgorithmConfig.algorithms[0],
+    method: 'Bubble Sort',
     arrayLength: sortingAlgorithmConfig.array.defaultSize,
+    speed: sortingAlgorithmConfig.speed.default,
+    isRunning: false,
+    isSorting: false,
     comparing: [],
     swapping: [],
     sorted: [],
-    speed: sortingAlgorithmConfig.speed.default,
-    isRunning: false,
-    showComplexity: false,
-    showToast: false
+    stats: {
+      comparisons: 0,
+      swaps: 0,
+      moves: 0
+    }
   });
 
-  const [shouldSort, setShouldSort] = useState(false);
-  const [isShuffling, setIsShuffling] = useState(false);
-
-  const isArraySorted = (arr) => {
-    if (!arr.length) return false;
-    for (let i = 0; i < arr.length - 1; i++) {
-      if (arr[i].value > arr[i + 1].value) return false;
+  // Check if array is sorted without modifying state
+  const checkIfSorted = () => {
+    if (!state.array || state.array.length === 0) return false;
+    for (let i = 0; i < state.array.length - 1; i++) {
+      if (state.array[i].value > state.array[i + 1].value) return false;
     }
     return true;
   };
 
-  const createArray = (size = sortingAlgorithmConfig.array.defaultSize) => {
-    const newArray = Array.from({ length: size }, (_, i) => ({
-      value: Math.floor(Math.random() * ((window.innerHeight/4)-30+1)) + 30,
-      id: `id-${i}`,
-    }));
-    
-    setState(prev => ({
-      ...prev,
-      array: newArray,
-      arrayLength: size,
-      sorted: [],
-      comparing: [],
-      swapping: [],
-      showToast: false
+  // Create setter functions for each state property
+  const setArray = (newArray) => {
+    setState(prev => ({ ...prev, array: newArray }));
+  };
+
+  const setComparing = (indices) => {
+    setState(prev => ({ ...prev, comparing: indices }));
+  };
+
+  const setSwapping = (indices) => {
+    setState(prev => ({ ...prev, swapping: indices }));
+  };
+
+  const setSorted = (callback) => {
+    setState(prev => ({ 
+      ...prev, 
+      sorted: typeof callback === 'function' ? callback(prev.sorted) : callback 
     }));
   };
 
-  const handleSort = async (e) => {
-    if (e) e.preventDefault();
-    
-    if (isArraySorted(state.array) && !state.showToast) {
-      setState(prev => ({ ...prev, showToast: true }));
-      return;
-    }
-    
-    let results = [];
-    setState(prev => ({ ...prev, isRunning: true }));
+  const setMethod = (newMethod) => {
+    setState(prev => ({
+      ...prev,
+      method: newMethod,
+      comparing: [],
+      swapping: [],
+      sorted: [],
+      isRunning: false,
+      isSorting: false,
+      stats: {
+        comparisons: 0,
+        swaps: 0,
+        moves: 0
+      }
+    }));
+    // Create new array when changing algorithm
+    createArray(state.arrayLength);
+  };
 
-    switch (state.method) {
-      case "Bubble Sort":
-        results = bubbleSort([...state.array], state.array.length);
-        break;
-      case "Selection Sort":
-        results = selectionSort([...state.array], state.array.length);
-        break;
-      case "Merge Sort":
-        results = mergeSort([...state.array], state.array.length);
-        break;
-      case "Quick Sort":
-      default:
-        results = quickSort([...state.array], state.array.length);
-        break;
-    }
+  const setSpeed = (newSpeed) => {
+    setState(prev => ({ ...prev, speed: newSpeed }));
+  };
 
-    for (let i = 0; i < results.length; i++) {
-      await new Promise(resolve => setTimeout(resolve, state.speed));
-      setState(prev => ({
-        ...prev,
-        array: results[i].array,
-        comparing: results[i].comparing,
-        swapping: results[i].swapping,
-        sorted: results[i].sorted
-      }));
+  // Calculate max bars based on container width
+  const calculateMaxBars = () => {
+    const isMobile = window.innerWidth <= 768;
+    const containerWidth = isMobile ? window.innerWidth - 32 : window.innerWidth * 0.8; // Account for padding
+    const minBarWidth = 8; // Minimum width of each bar in pixels
+    const gap = 4; // Gap between bars in pixels
+    const maxPossibleBars = Math.floor(containerWidth / (minBarWidth + gap));
+    
+    return Math.min(maxPossibleBars, sortingAlgorithmConfig.array.maxSize);
+  };
+
+  // Create array with size constraints
+  const createArray = (length = state.arrayLength) => {
+    const isMobile = window.innerWidth <= 768;
+    const maxBars = calculateMaxBars();
+    const minSize = sortingAlgorithmConfig.array.minSize;
+    
+    // Use appropriate size based on device and constraints
+    const validLength = Math.max(
+      minSize,
+      Math.min(
+        length,
+        maxBars,
+        isMobile ? sortingAlgorithmConfig.array.minSize : sortingAlgorithmConfig.array.defaultSize
+      )
+    );
+
+    const newArray = Array.from({ length: validLength }, (_, i) => ({
+      value: Math.floor(Math.random() * 100) + 1,
+      id: i
+    }));
+
+    setState(prev => ({
+      ...prev,
+      array: newArray,
+      arrayLength: validLength,
+      comparing: [],
+      swapping: [],
+      sorted: [],
+      isRunning: false,
+      isSorting: false,
+      stats: {
+        comparisons: 0,
+        swaps: 0,
+        moves: 0
+      }
+    }));
+  };
+
+  const handleSort = async () => {
+    if (state.isRunning || checkIfSorted()) return;
+    
+    setState(prev => ({ 
+      ...prev, 
+      isRunning: true,
+      isSorting: false,
+      comparing: [],
+      swapping: [],
+      sorted: []
+    }));
+
+    let result;
+    try {
+      switch (state.method) {
+        case "Bubble Sort":
+          result = await bubbleSort(state.array, setArray, setComparing, setSwapping, setSorted, state.speed);
+          break;
+        case "Selection Sort":
+          result = await selectionSort(state.array, setArray, setComparing, setSwapping, setSorted, state.speed);
+          break;
+        case "Insertion Sort":
+          result = await insertionSort(state.array, setArray, setComparing, setSwapping, setSorted, state.speed);
+          break;
+        case "Merge Sort":
+          result = await mergeSort(state.array, setArray, setComparing, setSwapping, setSorted, state.speed);
+          break;
+        case "Quick Sort":
+          result = await quickSort(state.array, setArray, setComparing, setSwapping, setSorted, state.speed);
+          break;
+        case "Heap Sort":
+          result = await heapSort(state.array, setArray, setComparing, setSwapping, setSorted, state.speed);
+          break;
+        case "Shell Sort":
+          result = await shellSort(state.array, setArray, setComparing, setSwapping, setSorted, state.speed);
+          break;
+        case "Cocktail Sort":
+          result = await cocktailSort(state.array, setArray, setComparing, setSwapping, setSorted, state.speed);
+          break;
+        default:
+          result = { moves: 0, swaps: 0 };
+      }
+
+      // Mark all elements as sorted when complete
+      setSorted([...Array(state.array.length).keys()]);
+    } catch (error) {
+      console.error('Sorting error:', error);
     }
 
     setState(prev => ({
       ...prev,
+      stats: result || { moves: 0, swaps: 0 },
       isRunning: false,
+      isSorting: true,
       comparing: [],
       swapping: []
     }));
   };
 
-  const toggleComplexity = () => {
-    setState(prev => ({ ...prev, showComplexity: !prev.showComplexity }));
-  };
-
-  const toggleToast = () => {
-    setState(prev => ({ ...prev, showToast: !prev.showToast }));
-  };
-
-  const shuffleArray = () => {
-    setState(prev => {
-      const shuffledArray = [...prev.array];
-      
-      // Fisher-Yates shuffle
-      for (let i = shuffledArray.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
-      }
-      
-      return {
-        ...prev,
-        array: shuffledArray,
-        sorted: [],
-        comparing: [],
-        swapping: [],
-        showToast: false
-      };
-    });
-    setIsShuffling(true);
-  };
-
-  // Effect to handle sorting after shuffle
+  // Initialize array based on device
   useEffect(() => {
-    if (isShuffling) {
-      handleSort();
-      setIsShuffling(false);
-    }
-  }, [isShuffling]);
+    const handleResize = () => {
+      const isMobile = window.innerWidth <= 768;
+      const initialSize = isMobile 
+        ? sortingAlgorithmConfig.array.minSize 
+        : sortingAlgorithmConfig.array.defaultSize;
+      createArray(initialSize);
+    };
 
-  useEffect(() => {
-    createArray(sortingAlgorithmConfig.array.defaultSize);
-    const handleResize = () => createArray(sortingAlgorithmConfig.array.defaultSize);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    setMounted(true);
+    handleResize();
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const value = {
-    ...state,
-    createArray,
-    handleSort,
-    toggleComplexity,
-    toggleToast,
-    setState,
-    shuffleArray
-  };
+  // Don't render anything until mounted (client-side)
+  if (!mounted) return null;
 
   return (
-    <SortingContext.Provider value={value}>
+    <SortingContext.Provider
+      value={{
+        ...state,
+        createArray,
+        handleSort,
+        setMethod,
+        setSpeed,
+        isArraySorted: checkIfSorted
+      }}
+    >
       {children}
     </SortingContext.Provider>
   );
-}; 
+};
+
+export default SortingContext; 
