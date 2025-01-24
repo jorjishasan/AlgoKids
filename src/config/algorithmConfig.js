@@ -3,23 +3,131 @@
 import React, { useEffect, useState } from 'react';
 
 export const sortingAlgorithmConfig = {
+  algorithms: [
+    {
+      name: "Bubble Sort",
+      icon: "🫧",
+      complexity: {
+        time: {
+          best: "O(n)",
+          average: "O(n²)",
+          worst: "O(n²)"
+        },
+        space: "O(1)",
+        stable: true,
+        description: "Simple comparison-based algorithm that repeatedly steps through the list, compares adjacent elements and swaps them if they are in the wrong order."
+      }
+    },
+    {
+      name: "Selection Sort",
+      icon: "🎯",
+      complexity: {
+        time: {
+          best: "O(n²)",
+          average: "O(n²)",
+          worst: "O(n²)"
+        },
+        space: "O(1)",
+        stable: false,
+        description: "Divides the input list into a sorted and an unsorted region, and repeatedly selects the smallest element from the unsorted region to add to the sorted region."
+      }
+    },
+    {
+      name: "Insertion Sort",
+      icon: "📥",
+      complexity: {
+        time: {
+          best: "O(n)",
+          average: "O(n²)",
+          worst: "O(n²)"
+        },
+        space: "O(1)",
+        stable: true,
+        description: "Builds the final sorted array one item at a time, by repeatedly inserting a new element into the sorted portion of the array."
+      }
+    },
+    {
+      name: "Merge Sort",
+      icon: "🤝",
+      complexity: {
+        time: {
+          best: "O(n log n)",
+          average: "O(n log n)",
+          worst: "O(n log n)"
+        },
+        space: "O(n)",
+        stable: true,
+        description: "Divide and conquer algorithm that recursively breaks down a problem into smaller, more manageable subproblems until they become simple enough to solve directly."
+      }
+    },
+    {
+      name: "Quick Sort",
+      icon: "⚡",
+      complexity: {
+        time: {
+          best: "O(n log n)",
+          average: "O(n log n)",
+          worst: "O(n²)"
+        },
+        space: "O(log n)",
+        stable: false,
+        description: "Efficient, in-place sorting algorithm that uses a divide-and-conquer strategy to sort elements by selecting a 'pivot' element and partitioning the array around it."
+      }
+    },
+    {
+      name: "Heap Sort",
+      icon: "🏔️",
+      complexity: {
+        time: {
+          best: "O(n log n)",
+          average: "O(n log n)",
+          worst: "O(n log n)"
+        },
+        space: "O(1)",
+        stable: false,
+        description: "Comparison-based sorting algorithm that uses a binary heap data structure to build a max-heap and repeatedly extract the maximum element."
+      }
+    },
+    {
+      name: "Shell Sort",
+      icon: "🐚",
+      complexity: {
+        time: {
+          best: "O(n log n)",
+          average: "O(n log n)",
+          worst: "O(n²)"
+        },
+        space: "O(1)",
+        stable: false,
+        description: "Optimization of insertion sort that allows the exchange of items that are far apart, progressively reducing the gap between elements to be compared."
+      }
+    },
+    {
+      name: "Cocktail Sort",
+      icon: "🍸",
+      complexity: {
+        time: {
+          best: "O(n)",
+          average: "O(n²)",
+          worst: "O(n²)"
+        },
+        space: "O(1)",
+        stable: true,
+        description: "Variation of bubble sort that sorts in both directions on each pass through the list, like shaking a cocktail shaker."
+      }
+    }
+  ],
+  array: {
+    minSize: 5,
+    maxSize: 50,
+    defaultSize: 16
+  },
   speed: {
     min: 100,
-    max: 1000,
-    default: 500,
+    max: 2000,
+    default: 50,
     step: 100
-  },
-  array: {
-    minSize: 2,
-    maxSize: 20,
-    defaultSize: 10
-  },
-  algorithms: [
-    "Quick Sort",
-    "Bubble Sort",
-    "Selection Sort",
-    "Merge Sort"
-  ]
+  }
 };
 
 export const useScreenSizeConfig = () => {
