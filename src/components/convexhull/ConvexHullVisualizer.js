@@ -1,6 +1,6 @@
 "use client"
 import { useConvexHull } from '../../context/ConvexHullContext';
-import NavBar from './NavBar';
+import Navigation from './Navigation';
 import Canvas from './Canvas';
 
 const ConvexHullVisualizer = () => {
@@ -17,7 +17,7 @@ const ConvexHullVisualizer = () => {
 
   return (
     <div className="min-h-screen bg-[#1A1B1E]">
-      <NavBar 
+      <Navigation 
         isAnimating={isAnimating}
         points={points}
         onRandomize={randomizePoints}
