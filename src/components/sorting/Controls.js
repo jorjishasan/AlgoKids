@@ -1,40 +1,23 @@
 "use client"
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { sortingAlgorithmConfig } from '@/config/algorithmConfig';
 import CaretIcon from '@/components/icons/CaretIcon';
+import { useSorting } from '@/context/SortingContext';
 
-const Controls = ({ createArray, setSpeed, isRunning }) => {
+const Controls = ({ isRunning }) => {
   const [showControls, setShowControls] = useState(false);
-  const [arraySize, setArraySize] = useState(sortingAlgorithmConfig.array.defaultSize);
-  const [speedValue, setSpeedValue] = useState(sortingAlgorithmConfig.speed.default);
-  const [maxBars, setMaxBars] = useState(sortingAlgorithmConfig.array.maxSize);
-
-  useEffect(() => {
-    const calculateMaxBars = () => {
-      const isMobile = window.innerWidth <= 768;
-      const containerWidth = isMobile ? window.innerWidth - 32 : window.innerWidth * 0.8;
-      const minBarWidth = isMobile ? 4 : 8;
-      const gap = isMobile ? 2 : 4;
-      const maxPossibleBars = Math.floor(containerWidth / (minBarWidth + gap));
-      setMaxBars(Math.min(maxPossibleBars, sortingAlgorithmConfig.array.maxSize));
-    };
-
-    calculateMaxBars();
-    window.addEventListener('resize', calculateMaxBars);
-    return () => window.removeEventListener('resize', calculateMaxBars);
-  }, []);
+  const { arrayLength, speed, setSpeed, createArray, arrayConstraints } = useSorting();
+  const { maxBars } = arrayConstraints;
 
   const handleArraySizeChange = (e) => {
-    const value = Number(e.target.value);
-    setArraySize(value);
-    createArray(value);
+    const newSize = parseInt(e.target.value);
+    createArray(newSize);
   };
 
   const handleSpeedChange = (e) => {
-    const value = Number(e.target.value);
-    setSpeedValue(value);
-    setSpeed(value);
+    const newSpeed = parseInt(e.target.value);
+    setSpeed(newSpeed);
   };
 
   return (
@@ -67,15 +50,20 @@ const Controls = ({ createArray, setSpeed, isRunning }) => {
           >
             <div className="space-y-6">
               <div>
-                <label className="block text-white font-bold mb-2">
-                  Array Size
-                </label>
+                <div className="flex justify-between items-center mb-2">
+                  <label className="block text-white font-bold">
+                    Array Size
+                  </label>
+                  <span className="text-xs text-white">
+                    max: {maxBars}
+                  </span>
+                </div>
                 <div className="relative pt-1">
                   <div className="relative">
                     <div 
-                      className="absolute bottom-2 h-2 bg-purple-400/50 rounded-lg"
+                      className="absolute bottom-2 h-2 bg-purple-400 rounded-lg"
                       style={{
-                        width: `${((arraySize - sortingAlgorithmConfig.array.minSize) / 
+                        width: `${((arrayLength - sortingAlgorithmConfig.array.minSize) / 
                           (maxBars - sortingAlgorithmConfig.array.minSize)) * 100}%`
                       }}
                     />
@@ -83,10 +71,10 @@ const Controls = ({ createArray, setSpeed, isRunning }) => {
                       type="range"
                       min={sortingAlgorithmConfig.array.minSize}
                       max={maxBars}
-                      value={arraySize}
+                      value={arrayLength}
                       onChange={handleArraySizeChange}
                       disabled={isRunning}
-                      className="relative w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer
+                      className="relative w-full h-2 bg-white/40 rounded-lg appearance-none cursor-pointer
                         [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 
                         [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:rounded-full 
                         [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:cursor-pointer
@@ -95,8 +83,7 @@ const Controls = ({ createArray, setSpeed, isRunning }) => {
                     />
                   </div>
                   <div className="flex justify-between mt-1">
-                    <span className="text-xs text-white/60">{arraySize} items</span>
-                    <span className="text-xs text-white/60">max: {maxBars}</span>
+                    <span className="text-xs text-black/50">{arrayLength} items</span>
                   </div>
                 </div>
               </div>
@@ -108,9 +95,9 @@ const Controls = ({ createArray, setSpeed, isRunning }) => {
                 <div className="relative pt-1">
                   <div className="relative">
                     <div 
-                      className="absolute bottom-2 h-2 bg-purple-400/50 rounded-lg"
+                      className="absolute bottom-2 h-2 bg-purple-400 rounded-lg"
                       style={{
-                        width: `${((speedValue - sortingAlgorithmConfig.speed.min) / 
+                        width: `${((speed - sortingAlgorithmConfig.speed.min) / 
                           (sortingAlgorithmConfig.speed.max - sortingAlgorithmConfig.speed.min)) * 100}%`
                       }}
                     />
@@ -119,10 +106,10 @@ const Controls = ({ createArray, setSpeed, isRunning }) => {
                       min={sortingAlgorithmConfig.speed.min}
                       max={sortingAlgorithmConfig.speed.max}
                       step={sortingAlgorithmConfig.speed.step}
-                      value={speedValue}
+                      value={speed}
                       onChange={handleSpeedChange}
                       disabled={isRunning}
-                      className="relative w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer
+                      className="relative w-full h-2 bg-white/40 rounded-lg appearance-none cursor-pointer
                         [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 
                         [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:rounded-full 
                         [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:cursor-pointer
@@ -131,7 +118,7 @@ const Controls = ({ createArray, setSpeed, isRunning }) => {
                     />
                   </div>
                   <div className="flex justify-between mt-1">
-                    <span className="text-xs text-white/60">{speedValue}ms delay</span>
+                    <span className="text-xs text-black/50">{speed}ms delay</span>
                   </div>
                 </div>
               </div>
