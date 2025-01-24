@@ -47,7 +47,7 @@ const SortingVisualizer = () => {
   const getBarColor = (index, comparing, swapping, sorted) => {
     if (swapping.includes(index)) return 'bg-red-400'; // Bright yellow for swapping
     if (comparing.includes(index)) return 'bg-amber-500'; // Playful yellow for comparing
-    if (sorted.includes(index)) return 'bg-green-400'; // Happy green for sorted
+    if (sorted.includes(index)) return 'bg-green-300'; // Happy green for sorted
     return 'bg-white/60'; // Cool white for unsorted
   };
 
@@ -59,7 +59,7 @@ const SortingVisualizer = () => {
           { color: "bg-white", text: "Unsorted" },
           { color: "bg-amber-500", text: "Comparing" },
           { color: "bg-red-400", text: "Swapping" },
-          { color: "bg-green-400", text: "Sorted" }
+          { color: "bg-green-300", text: "Sorted" }
         ].map(({ color, text }) => (
           <motion.div
             key={text}
