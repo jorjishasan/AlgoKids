@@ -18,7 +18,7 @@ const Sorting = () => {
       <div className="min-h-screen relative bg-gradient-to-b from-blue-400 to-purple-400">
         {/* Info Icon */}
         <motion.div 
-          className="fixed bottom-12 right-8 z-50"
+          className="fixed bottom-6 lg:bottom-12 right-6 lg:right-8 z-50"
           whileHover={{ scale: 1.1, rotate: 5 }}
           whileTap={{ scale: 0.9, rotate: -5 }}
         >
