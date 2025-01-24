@@ -48,7 +48,7 @@ const SortingVisualizer = () => {
     if (swapping.includes(index)) return 'bg-red-400'; // Bright yellow for swapping
     if (comparing.includes(index)) return 'bg-amber-500'; // Playful yellow for comparing
     if (sorted.includes(index)) return 'bg-green-300'; // Happy green for sorted
-    return 'bg-white/60'; // Cool white for unsorted
+    return 'bg-white/40'; // Cool white for unsorted
   };
 
   return (
@@ -73,7 +73,7 @@ const SortingVisualizer = () => {
       </div>
 
       {/* Bars Container */}
-      <div className="flex-1 flex items-start justify-between gap-[2px] bg-white/20 rounded-2xl overflow-hidden p-4 lg:px-10 ">
+      <div className="flex-1 flex items-start justify-between gap-[2px] overflow-hidden p-4 lg:px-10 ">
         {array.map((element, index) => {
           const heightPercentage = (element.value / maxValue) * maxHeight;
           let barColor = getBarColor(index, comparing, swapping, sorted);
