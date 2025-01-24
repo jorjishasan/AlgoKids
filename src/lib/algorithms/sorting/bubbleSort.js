@@ -1,53 +1,49 @@
-export const bubbleSort = (arr, length) => {
-  const animations = [];
-  const array = [...arr];
-  const sorted = new Set();
-  
-  for (let i = 0; i < length - 1; i++) {
-    for (let j = 0; j < length - i - 1; j++) {
-      // Add comparison state
-      animations.push({
-        array: [...array],
-        comparing: [j, j + 1],
-        swapping: [],
-        sorted: Array.from(sorted)
-      });
-      
-      if (array[j].value > array[j + 1].value) {
-        // Add swapping state
-        animations.push({
-          array: [...array],
-          comparing: [],
-          swapping: [j, j + 1],
-          sorted: Array.from(sorted)
-        });
-        
-        // Swap elements
-        let temp = array[j];
-        array[j] = array[j + 1];
-        array[j + 1] = temp;
+"use client"
+
+const bubbleSort = async (array, setArray, setComparing, setSwapping, setSorted, speed) => {
+  const n = array.length;
+  const newArray = [...array];
+  let moves = 0;
+  let swaps = 0;
+
+  for (let i = 0; i < n - 1; i++) {
+    let swapped = false;
+
+    for (let j = 0; j < n - i - 1; j++) {
+      setComparing([j, j + 1]);
+      await new Promise(resolve => setTimeout(resolve, speed));
+      moves++;
+
+      if (newArray[j].value > newArray[j + 1].value) {
+        setSwapping([j, j + 1]);
+        [newArray[j], newArray[j + 1]] = [newArray[j + 1], newArray[j]];
+        setArray([...newArray]);
+        await new Promise(resolve => setTimeout(resolve, speed));
+        swapped = true;
+        swaps++;
       }
     }
-    // Add element to sorted
-    sorted.add(length - 1 - i);
-    
-    // Show the current state
-    animations.push({
-      array: [...array],
-      comparing: [],
-      swapping: [],
-      sorted: Array.from(sorted)
-    });
+
+    if (!swapped) {
+      // If no swapping occurred, all elements from current position are sorted
+      for (let k = 0; k < n - i; k++) {
+        if (!newArray[k].sorted) {
+          setSorted(prev => [...prev, k]);
+        }
+      }
+      break;
+    }
+
+    // Mark the last element in this pass as sorted
+    setSorted(prev => [...prev, n - i - 1]);
   }
-  
-  // Add first element to sorted
-  sorted.add(0);
-  animations.push({
-    array: [...array],
-    comparing: [],
-    swapping: [],
-    sorted: Array.from(sorted)
-  });
-  
-  return animations;
-}; 
+
+  // Mark any remaining unsorted elements as sorted
+  for (let i = 0; i < n; i++) {
+    setSorted(prev => prev.includes(i) ? prev : [...prev, i]);
+  }
+
+  return { moves, swaps };
+};
+
+export default bubbleSort;
