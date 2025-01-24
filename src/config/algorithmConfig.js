@@ -120,7 +120,7 @@ export const sortingAlgorithmConfig = {
   array: {
     minSize: 5,
     maxSize: 100,
-    defaultSize: 16,
+    defaultSize: 36,
     bar: {
       minWidth: {
         mobile: 24,  // Minimum width to fit numbers on mobile
