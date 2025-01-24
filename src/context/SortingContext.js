@@ -1,5 +1,5 @@
 "use client"
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import bubbleSort from '@/lib/algorithms/sorting/bubbleSort';
 import selectionSort from '@/lib/algorithms/sorting/selectionSort';
 import insertionSort from '@/lib/algorithms/sorting/insertionSort';
@@ -9,17 +9,18 @@ import heapSort from '@/lib/algorithms/sorting/heapSort';
 import shellSort from '@/lib/algorithms/sorting/shellSort';
 import cocktailSort from '@/lib/algorithms/sorting/cocktailSort';
 import { sortingAlgorithmConfig } from '@/config/algorithmConfig';
+import { useDevice } from '@/context/DeviceContext';
 
 const SortingContext = createContext();
 
 export const useSorting = () => useContext(SortingContext);
 
 export const SortingProvider = ({ children }) => {
-  const [mounted, setMounted] = useState(false);
+  const { width, isMobile } = useDevice();
   const [state, setState] = useState({
     array: [],
     method: 'Bubble Sort',
-    arrayLength: sortingAlgorithmConfig.array.defaultSize,
+    arrayLength: isMobile ? sortingAlgorithmConfig.array.minSize : sortingAlgorithmConfig.array.defaultSize,
     speed: sortingAlgorithmConfig.speed.default,
     isRunning: false,
     isSorting: false,
@@ -32,6 +33,58 @@ export const SortingProvider = ({ children }) => {
       moves: 0
     }
   });
+
+  // Calculate array visualization constraints based on device width
+  const calculateArrayConstraints = useCallback(() => {
+    if (!width) return {
+      maxBars: sortingAlgorithmConfig.array.defaultSize,
+      containerWidth: 0,
+      minBarWidth: 32,
+      gap: 8,
+      barWidth: 32
+    };
+
+    const containerWidth = isMobile 
+      ? width - 32  // Mobile padding
+      : width * 0.8; // Desktop container width
+
+    const minBarWidth = isMobile 
+      ? sortingAlgorithmConfig.array.bar.minWidth.mobile 
+      : sortingAlgorithmConfig.array.bar.minWidth.desktop;
+
+    const gap = isMobile 
+      ? sortingAlgorithmConfig.array.bar.gap.mobile 
+      : sortingAlgorithmConfig.array.bar.gap.desktop;
+
+    // Calculate maximum possible bars that can fit in the container
+    const maxPossibleBars = Math.floor(containerWidth / (minBarWidth + gap));
+    const maxBars = Math.min(maxPossibleBars, sortingAlgorithmConfig.array.maxSize);
+
+    // Calculate initial array length
+    const initialLength = isMobile 
+      ? sortingAlgorithmConfig.array.minSize 
+      : sortingAlgorithmConfig.array.defaultSize;
+
+    // If it's initial render or array is empty, use initial length
+    const currentLength = state.array.length || initialLength;
+    
+    // Calculate total gap width and available width for bars
+    const totalGapWidth = (currentLength - 1) * gap;
+    const availableWidth = containerWidth - totalGapWidth;
+    
+    // Calculate bar width - initially use full available width divided by number of bars
+    const barWidth = state.array.length === 0
+      ? availableWidth / initialLength
+      : Math.max(minBarWidth, availableWidth / currentLength);
+
+    return {
+      maxBars,
+      containerWidth,
+      minBarWidth,
+      gap,
+      barWidth
+    };
+  }, [width, isMobile, state.array.length]);
 
   // Check if array is sorted without modifying state
   const checkIfSorted = () => {
@@ -62,54 +115,15 @@ export const SortingProvider = ({ children }) => {
     }));
   };
 
-  const setMethod = (newMethod) => {
-    setState(prev => ({
-      ...prev,
-      method: newMethod,
-      comparing: [],
-      swapping: [],
-      sorted: [],
-      isRunning: false,
-      isSorting: false,
-      stats: {
-        comparisons: 0,
-        swaps: 0,
-        moves: 0
-      }
-    }));
-    // Create new array when changing algorithm
-    createArray(state.arrayLength);
-  };
-
-  const setSpeed = (newSpeed) => {
-    setState(prev => ({ ...prev, speed: newSpeed }));
-  };
-
-  // Calculate max bars based on container width
-  const calculateMaxBars = () => {
-    const isMobile = window.innerWidth <= 768;
-    const containerWidth = isMobile ? window.innerWidth - 32 : window.innerWidth * 0.8; // Account for padding
-    const minBarWidth = 8; // Minimum width of each bar in pixels
-    const gap = 4; // Gap between bars in pixels
-    const maxPossibleBars = Math.floor(containerWidth / (minBarWidth + gap));
-    
-    return Math.min(maxPossibleBars, sortingAlgorithmConfig.array.maxSize);
-  };
-
   // Create array with size constraints
-  const createArray = (length = state.arrayLength) => {
-    const isMobile = window.innerWidth <= 768;
-    const maxBars = calculateMaxBars();
+  const createArray = useCallback((length = state.arrayLength) => {
+    const { maxBars } = calculateArrayConstraints();
     const minSize = sortingAlgorithmConfig.array.minSize;
     
     // Use appropriate size based on device and constraints
     const validLength = Math.max(
       minSize,
-      Math.min(
-        length,
-        maxBars,
-        isMobile ? sortingAlgorithmConfig.array.minSize : sortingAlgorithmConfig.array.defaultSize
-      )
+      Math.min(length, maxBars)
     );
 
     const newArray = Array.from({ length: validLength }, (_, i) => ({
@@ -132,6 +146,29 @@ export const SortingProvider = ({ children }) => {
         moves: 0
       }
     }));
+  }, [calculateArrayConstraints]);
+
+  const setMethod = (newMethod) => {
+    setState(prev => ({
+      ...prev,
+      method: newMethod,
+      comparing: [],
+      swapping: [],
+      sorted: [],
+      isRunning: false,
+      isSorting: false,
+      stats: {
+        comparisons: 0,
+        swaps: 0,
+        moves: 0
+      }
+    }));
+    // Create new array when changing algorithm
+    createArray(state.arrayLength);
+  };
+
+  const setSpeed = (newSpeed) => {
+    setState(prev => ({ ...prev, speed: newSpeed }));
   };
 
   const handleSort = async () => {
@@ -193,25 +230,12 @@ export const SortingProvider = ({ children }) => {
     }));
   };
 
-  // Initialize array based on device
+  // Initialize array when device info changes
   useEffect(() => {
-    const handleResize = () => {
-      const isMobile = window.innerWidth <= 768;
-      const initialSize = isMobile 
-        ? sortingAlgorithmConfig.array.minSize 
-        : sortingAlgorithmConfig.array.defaultSize;
-      createArray(initialSize);
-    };
-
-    setMounted(true);
-    handleResize();
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  // Don't render anything until mounted (client-side)
-  if (!mounted) return null;
+    if (width > 0) {
+      createArray();
+    }
+  }, [width, isMobile, createArray]);
 
   return (
     <SortingContext.Provider
@@ -221,7 +245,8 @@ export const SortingProvider = ({ children }) => {
         handleSort,
         setMethod,
         setSpeed,
-        isArraySorted: checkIfSorted
+        isArraySorted: checkIfSorted,
+        arrayConstraints: calculateArrayConstraints()
       }}
     >
       {children}
