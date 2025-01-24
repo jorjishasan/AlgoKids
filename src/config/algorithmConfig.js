@@ -119,8 +119,22 @@ export const sortingAlgorithmConfig = {
   ],
   array: {
     minSize: 5,
-    maxSize: 50,
-    defaultSize: 16
+    maxSize: 100,
+    defaultSize: 16,
+    bar: {
+      minWidth: {
+        mobile: 24,  // Minimum width to fit numbers on mobile
+        desktop: 32  // Minimum width to fit numbers on desktop
+      },
+      gap: {
+        mobile: 4,   // Gap between bars on mobile
+        desktop: 8   // Gap between bars on desktop
+      },
+      maxHeight: {
+        mobile: 200, // Maximum bar height on mobile
+        desktop: 400 // Maximum bar height on desktop
+      }
+    }
   },
   speed: {
     min: 100,
