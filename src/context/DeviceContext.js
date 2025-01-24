@@ -1,28 +1,30 @@
 "use client"
 import { createContext, useContext, useState, useEffect } from 'react';
 
-const DeviceContext = createContext(null);
+const DeviceContext = createContext();
 
 export const DeviceProvider = ({ children }) => {
-  const [isMobile, setIsMobile] = useState(false);
+  const [deviceInfo, setDeviceInfo] = useState({
+    width: typeof window !== 'undefined' ? window.innerWidth : 0,
+    isMobile: typeof window !== 'undefined' ? window.innerWidth <= 768 : false
+  });
 
   useEffect(() => {
-    const checkDevice = () => {
-      setIsMobile(window.innerWidth < 768);
+    const updateDeviceInfo = () => {
+      setDeviceInfo({
+        width: window.innerWidth,
+        isMobile: window.innerWidth <= 768
+      });
     };
 
-    // Initial check
-    checkDevice();
+    window.addEventListener('resize', updateDeviceInfo);
+    updateDeviceInfo(); // Initial call
 
-    // Add event listener for window resize
-    window.addEventListener('resize', checkDevice);
-
-    // Cleanup
-    return () => window.removeEventListener('resize', checkDevice);
+    return () => window.removeEventListener('resize', updateDeviceInfo);
   }, []);
 
   return (
-    <DeviceContext.Provider value={{ isMobile }}>
+    <DeviceContext.Provider value={deviceInfo}>
       {children}
     </DeviceContext.Provider>
   );
@@ -30,7 +32,7 @@ export const DeviceProvider = ({ children }) => {
 
 export const useDevice = () => {
   const context = useContext(DeviceContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error('useDevice must be used within a DeviceProvider');
   }
   return context;
