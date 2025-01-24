@@ -32,10 +32,15 @@ export const ConvexHullProvider = ({ children }) => {
   const randomizePoints = useCallback(() => {
     const numPoints = Math.floor(Math.random() * 15) + 10; // Generate 10-25 points
     const newPoints = [];
-    const width = 800;  // Match canvas width
-    const height = 600; // Match canvas height
-    const padding = 50; // Padding from edges
-
+    
+    // Get canvas dimensions from the canvas element
+    const canvas = document.querySelector('canvas');
+    if (!canvas) return;
+    
+    const width = canvas.width;
+    const height = canvas.height;
+    const padding = width / 40; // Same padding as in Canvas component
+    
     for (let i = 0; i < numPoints; i++) {
       newPoints.push({
         x: Math.random() * (width - 2 * padding) + padding,
@@ -61,7 +66,7 @@ export const ConvexHullProvider = ({ children }) => {
       }
     }
 
-    // Sort points by polar angle
+    // Sort points by polar angle with animation
     const sortedPoints = points
       .filter(p => p !== bottomPoint)
       .sort((a, b) => {
@@ -70,46 +75,63 @@ export const ConvexHullProvider = ({ children }) => {
         return angleA - angleB;
       });
 
-    // Visualize angle sorting
+    // Visualize angle sorting with smooth animation
     for (const point of sortedPoints) {
       setCurrentLine({
         from: bottomPoint,
         to: point,
-        color: '#ff0000'
+        color: '#fbbf24' // Amber color for scanning
       });
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, 50)); // Faster animation
     }
 
-    const hull = [bottomPoint, sortedPoints[0], sortedPoints[1]];
+    const hull = [bottomPoint];
     setHull(hull);
-    await new Promise(resolve => setTimeout(resolve, 500));
 
-    // Process remaining points with visualization
-    for (let i = 2; i < sortedPoints.length; i++) {
-      while (hull.length > 1 && !isCounterClockwise(
+    // Process remaining points with smooth animation
+    for (let i = 0; i < sortedPoints.length; i++) {
+      const point = sortedPoints[i];
+      
+      while (hull.length >= 2 && !isCounterClockwise(
         hull[hull.length - 2],
         hull[hull.length - 1],
-        sortedPoints[i]
+        point
       )) {
-        // Visualize point being checked
+        // Visualize checking with red line
         setCurrentLine({
           from: hull[hull.length - 2],
-          to: sortedPoints[i],
-          color: '#yellow'
+          to: point,
+          color: '#f87171' // Red color for removing points
         });
-        await new Promise(resolve => setTimeout(resolve, 200));
+        await new Promise(resolve => setTimeout(resolve, 100));
         hull.pop();
         setHull([...hull]);
-        await new Promise(resolve => setTimeout(resolve, 200));
       }
-      hull.push(sortedPoints[i]);
+      
+      // Visualize adding point with green line
+      setCurrentLine({
+        from: hull[hull.length - 1],
+        to: point,
+        color: '#4ade80' // Green color for adding points
+      });
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      hull.push(point);
       setHull([...hull]);
-      await new Promise(resolve => setTimeout(resolve, 200));
     }
 
-    // Complete the hull
+    // Complete the hull with animation
+    if (hull.length > 2) {
+      setCurrentLine({
+        from: hull[hull.length - 1],
+        to: hull[0],
+        color: '#4ade80'
+      });
+      await new Promise(resolve => setTimeout(resolve, 100));
+      setHull([...hull, hull[0]]);
+    }
+    
     setCurrentLine(null);
-    setHull([...hull, hull[0]]);
     setIsAnimating(false);
   }, [points]);
 
