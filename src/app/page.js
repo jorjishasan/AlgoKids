@@ -16,7 +16,7 @@ const Home = () => {
       
       <div className="container font-mono mx-auto px-6 py-16 2xl:py-24 relative z-10">
         <h1 className="text-4xl  lg:text-5xl lg:font-black font-bold text-left md:text-center mb-4 lg:mb-8 bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500">
-          Algoview.app
+          Algokids.app
         </h1>
         
         <p className="text-left text-gray-300 mx-auto mb-12 xl:mb-16 xl:text-left max-w-[65ch] leading-normal">
