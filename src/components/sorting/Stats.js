@@ -10,7 +10,7 @@ const Stats = ({ isOpen, stats = { swaps: 0, moves: 0 }, onClose }) => {
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0, opacity: 0 }}
-        className="fixed inset-0 flex items-center justify-center z-50 bg-black/50"
+        className="fixed inset-0 flex items-center justify-center z-50 bg-black/60"
         onClick={onClose}
       >
         <motion.div 
