@@ -110,7 +110,7 @@ const Background3D = () => {
 
   if (!isMounted) return null;
 
-  return <div ref={containerRef} className="fixed inset-0 -z-10" />;
+  return <div ref={containerRef} className="fixed inset-0 -z-10 bg-black" />;
 };
 
 export default Background3D; 
