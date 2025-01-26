@@ -9,7 +9,7 @@ const InfoIcon = ({ onClick }) => {
       viewBox="0 0 24 24"
       fill="none"
       whileHover={{ scale: 1.1 }}
-      className="text-white cursor-pointer"
+      className="text-white cursor-pointer lg:w-8 lg:h-8"
       onClick={onClick}
     >
       {/* Outer glow effect */}
