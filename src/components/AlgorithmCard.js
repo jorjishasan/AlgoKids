@@ -57,7 +57,8 @@ const AlgorithmCard = ({
     >
       <div
         ref={cardRef}
-        className="h-full p-6 bg-black/90 border border-gray-700 rounded-lg transition-shadow duration-300 hover:shadow-lg hover:shadow-blue-500/10"
+        className="relative h-full p-6 bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xs 
+          border border-white/20 rounded-2xl transition-shadow duration-300 overflow-hidden"
       >
         <div className="flex flex-col h-full">
           <motion.div variants={iconVariants}>
