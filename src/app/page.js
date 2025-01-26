@@ -20,7 +20,7 @@ const Home = () => {
         </h1>
         
         <p className="text-left text-gray-300 mx-auto mb-12 xl:mb-16 xl:text-left max-w-[65ch] leading-normal">
-          Explore and visualize algorithms through interactive animations. Even an elementary school student can understand complex concepts with our intuitive visualization tools.
+          Explore and visualize algorithms through interactive animations. Even a K-12 school student can understand complex concepts with our intuitive visualization tools.
           The animation are aimed to be make complex concepts easy to understand. It's free and open source.
         </p>
 
