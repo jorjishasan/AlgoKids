@@ -2,21 +2,23 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import CubeLogo from '@/components/icons/CubeLogo';
+import { useState } from 'react';
 
 const Navigation = ({ isAnimating, points, onRandomize, onVisualize, onClear }) => {
+  const [isLogoHovered, setIsLogoHovered] = useState(false);
+
   return (
     <nav className="bg-gradient-to-r from-blue-400 via-purple-400 to-blue-400 shadow-lg p-4 relative z-10">
       <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-        <Link href="/" className="flex items-center gap-4 group">
-          <motion.div
-            initial={{ rotate: 0 }}
-            whileHover={{ rotate: 180 }}
-            transition={{ duration: 0.3 }}
-          >
-            <CubeLogo className="w-8 h-8" />
-          </motion.div>
+        <Link 
+          href="/" 
+          className="flex items-center gap-2 focus:outline-none"
+          onMouseEnter={() => setIsLogoHovered(true)}
+          onMouseLeave={() => setIsLogoHovered(false)}
+        >
+          <CubeLogo isHovered={isLogoHovered} />
           <motion.h1 
-            className="text-2xl font-bold text-white group-hover:text-white/90 transition-colors"
+            className="text-2xl font-bold text-white"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
           >

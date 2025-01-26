@@ -12,6 +12,7 @@ import { motion } from 'framer-motion';
 
 const NavBar = () => {
   const [isHamburgerOpen, setIsHamburgerOpen] = useState(false);
+  const [isLogoHovered, setIsLogoHovered] = useState(false);
   const { 
     method, 
     setMethod,
@@ -28,8 +29,13 @@ const NavBar = () => {
       <div className="max-w-7xl mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-10">
-            <Link href="/" className="flex items-center gap-3">
-              <CubeLogo />
+            <Link 
+              href="/" 
+              className="flex items-center gap-2 focus:outline-none"
+              onMouseEnter={() => setIsLogoHovered(true)}
+              onMouseLeave={() => setIsLogoHovered(false)}
+            >
+              <CubeLogo isHovered={isLogoHovered} />
               <motion.h1 
                 className="text-2xl font-bold text-white"
                 initial={{ opacity: 0, y: -20 }}
