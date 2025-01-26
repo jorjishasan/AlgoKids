@@ -1,13 +1,9 @@
-"use client";
-import Pathfinding from '../../components/pathfinding/Pathfinding';
-import { PathfindingProvider } from '../../context/PathfindingContext';
+import PathfindingClient from '@/components/pages/PathfindingClient';
 
-const PathfindingPage = () => {
-  return (
-    <PathfindingProvider>
-      <Pathfinding />
-    </PathfindingProvider>
-  );
+export const metadata = {
+  title: 'Pathfinding Visualizer',
 };
 
-export default PathfindingPage;
+export default function PathfindingPage() {
+  return <PathfindingClient />;
+}
