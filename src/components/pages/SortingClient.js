@@ -28,7 +28,7 @@ const SortingClient = () => {
               shadow-[0_0_15px_rgba(59,130,246,0.5)] hover:shadow-[0_0_20px_rgba(147,51,234,0.5)] 
               transition-all duration-300 group"
           >
-            <InfoIcon className="w-6 h-6 text-white group-hover:text-white/90" />
+            <InfoIcon className=" text-white group-hover:text-white/90" />
           </button>
         </motion.div>
 
