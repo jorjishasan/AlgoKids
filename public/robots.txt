@@ -1,0 +1,13 @@
+# **** PRODUCTION **** 
+# Allow all crawlers for production
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://algokids.app/sitemap.xml
+
+# **** STAGING **** 
+# Block all crawlers for staging/development
+User-agent: *
+Disallow: /
+Host: algokids.vercel.app 
