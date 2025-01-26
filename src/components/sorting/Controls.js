@@ -1,6 +1,6 @@
 "use client"
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { sortingAlgorithmConfig } from '@/config/algorithmConfig';
 import CaretIcon from '@/components/icons/CaretIcon';
 import { useSorting } from '@/context/SortingContext';
@@ -9,6 +9,25 @@ const Controls = ({ isRunning }) => {
   const [showControls, setShowControls] = useState(false);
   const { arrayLength, speed, setSpeed, createArray, arrayConstraints } = useSorting();
   const { maxBars } = arrayConstraints;
+  const controlsRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (controlsRef.current && !controlsRef.current.contains(event.target)) {
+        setShowControls(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Close controls when sorting starts
+  useEffect(() => {
+    if (isRunning) {
+      setShowControls(false);
+    }
+  }, [isRunning]);
 
   const handleArraySizeChange = (e) => {
     const newSize = parseInt(e.target.value);
@@ -21,7 +40,7 @@ const Controls = ({ isRunning }) => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative" ref={controlsRef}>
       <motion.button
         whileHover={{ scale: isRunning ? 1 : 1.05 }}
         whileTap={{ scale: isRunning ? 1 : 0.95 }}
@@ -40,7 +59,7 @@ const Controls = ({ isRunning }) => {
       </motion.button>
 
       <AnimatePresence>
-        {showControls && (
+        {!isRunning && showControls && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}

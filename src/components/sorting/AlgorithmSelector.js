@@ -1,15 +1,34 @@
 "use client";
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { sortingAlgorithmConfig } from '@/config/algorithmConfig';
 import CaretIcon from '@/components/icons/CaretIcon';
 
 const AlgorithmSelector = ({ method, setMethod, isRunning }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Close dropdown when sorting starts
+  useEffect(() => {
+    if (isRunning) {
+      setIsOpen(false);
+    }
+  }, [isRunning]);
 
   return (
     <>
-      <div className="relative">
+      <div className="relative" ref={dropdownRef}>
         <motion.button
           onClick={() => setIsOpen(!isOpen)}
           disabled={isRunning}
