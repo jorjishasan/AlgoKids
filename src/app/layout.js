@@ -17,8 +17,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Algorithm Visualizer",
-  description: "Interactive algorithm visualization tool",
+  title: {
+    template: '%s • AlGOKIDS',
+    default: 'Algorithms for kids • AlGOKIDS',
+  },
+  description: 'Learn algorithms through interactive visualizations',
 };
 
 export default function RootLayout({ children }) {
