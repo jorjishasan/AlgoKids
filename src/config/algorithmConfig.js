@@ -158,4 +158,58 @@ export const useScreenSizeConfig = () => {
   }, []);
 
   return sizes;
+};
+
+export const pathfindingAlgorithmConfig = {
+  algorithms: [
+    {
+      name: "Dijkstra's Algorithm",
+      icon: "🎯",
+      description: "Guarantees the shortest path",
+      complexity: "O(V + E log V)",
+      category: "weighted"
+    },
+    {
+      name: "A* Search",
+      icon: "⭐",
+      description: "Uses heuristics to find path faster",
+      complexity: "O(E)",
+      category: "weighted"
+    },
+    {
+      name: "Breadth First Search",
+      icon: "🌊",
+      description: "Explores like a ripple in water",
+      complexity: "O(V + E)",
+      category: "unweighted"
+    },
+    {
+      name: "Depth First Search",
+      icon: "🌲",
+      description: "Explores one path at a time",
+      complexity: "O(V + E)",
+      category: "unweighted"
+    },
+    {
+      name: "Swarm Algorithm",
+      icon: "🐝",
+      description: "Multiple agents explore together",
+      complexity: "O(V + E)",
+      category: "weighted"
+    },
+    {
+      name: "Convergent Swarm",
+      icon: "🎯",
+      description: "Swarm with target attraction",
+      complexity: "O(V + E)",
+      category: "weighted"
+    },
+    {
+      name: "Bidirectional Swarm",
+      icon: "⚡",
+      description: "Swarms from both ends meet",
+      complexity: "O(V + E)",
+      category: "weighted"
+    }
+  ]
 }; 
