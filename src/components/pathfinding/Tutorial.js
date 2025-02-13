@@ -20,13 +20,16 @@ const Tutorial = () => {
     <>
       {/* Tutorial Button */}
       <motion.button
-        className="fixed bottom-6 right-6 p-4 bg-white/20 hover:bg-white/30 backdrop-blur-md
-          text-white rounded-full shadow-lg z-50 cursor-pointer border border-white/30"
+        className={`fixed bottom-6 right-6 p-4 shadow-lg z-50 cursor-pointer rounded-full
+          ${isMobile 
+            ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-400/20' 
+            : 'bg-white/20 hover:bg-white/30 backdrop-blur-md text-white border border-white/30'
+          }`}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => setIsOpen(!isOpen)}
       >
-        <QuestionIcon className="w-6 h-6" />
+        <QuestionIcon className={`w-6 h-6 ${isMobile ? 'stroke-[2.5]' : 'stroke-2'}`} />
       </motion.button>
 
       {/* Tutorial Drawer */}
