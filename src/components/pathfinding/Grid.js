@@ -12,7 +12,7 @@ const Grid = ({
   shortestPathNodes 
 }) => {
   const { state } = usePathfinding();
-  const nodeSize = state.nodeSize || 35; // Fallback to 35px if not set
+  const nodeSize = state.nodeSize || 35;
 
   // Create a map of node positions to their path indices
   const pathIndices = new Map();
@@ -23,9 +23,15 @@ const Grid = ({
   }
 
   return (
-    <div className="grid-container mt-8 overflow-x-auto">
-      <div className="min-w-fit inline-block">
-        <table className="border-collapse" style={{ borderSpacing: '0' }}>
+    <div className="flex-1 flex justify-center items-center p-4 min-h-[calc(100vh-80px)]">
+      <div className="flex flex-col items-center">
+        <table 
+          className="border-collapse bg-white/5 rounded-lg shadow-xl" 
+          style={{ 
+            borderSpacing: '0',
+            padding: Math.max(nodeSize * 0.1, 8)
+          }}
+        >
           <tbody>
             {grid.map((row, index) => (
               <tr key={index} className="flex" style={{ height: `${nodeSize}px` }}>
