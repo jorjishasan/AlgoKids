@@ -58,15 +58,15 @@ const Node = ({
       }}
     >
       {isStart && (
-        <div className="absolute inset-0 flex items-center justify-center animate-pulse">
-          <div className="relative w-[95%] h-[95%]">
+        <div className="absolute inset-0 flex items-center justify-center animate-wiggle">
+          <div className="relative w-[85%] h-[85%] animate-float">
             <Image
               src="/startPoint.png"
               alt="Start"
               fill
               style={{ 
                 objectFit: 'contain',
-                filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))'
+                filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.3))'
               }}
               className="pointer-events-none"
               priority
@@ -75,15 +75,15 @@ const Node = ({
         </div>
       )}
       {isEnd && (
-        <div className="absolute inset-0 flex items-center justify-center animate-bounce">
-          <div className="relative w-[95%] h-[95%]">
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="relative w-[85%] h-[85%] animate-target-bounce">
             <Image
               src="/targetPoint.png"
               alt="Target"
               fill
               style={{ 
                 objectFit: 'contain',
-                filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))'
+                filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.3))'
               }}
               className="pointer-events-none"
               priority
@@ -93,21 +93,20 @@ const Node = ({
       )}
       {isShortestPath && !isStart && !isEnd && pathIndex !== undefined && (
         <div 
-          className="running-girl absolute inset-0 flex items-center justify-center"
+          className="path-step absolute inset-0 flex items-center justify-center"
           style={{
             animationDelay: `${animationDelay}s`,
-            opacity: 0,
-            animationFillMode: 'forwards'
           }}
         >
-          <div className="relative w-[90%] h-[90%]">
+          <div className="relative w-[70%] h-[70%] animate-path-step">
+            <div className="absolute inset-0 bg-yellow-300 rounded-full opacity-50 animate-ripple"></div>
             <Image
               src="/startPoint.png"
-              alt="Running"
+              alt="Path"
               fill
               style={{ 
                 objectFit: 'contain',
-                filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))'
+                filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.3))'
               }}
               className="pointer-events-none"
               priority
