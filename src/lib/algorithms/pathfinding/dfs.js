@@ -1,10 +1,10 @@
-const dfs = (grid, start, end) => {
+const dfs = async (grid, start, end, onVisit) => {
   const visitedNodes = [];
   const visited = new Set();
   const parent = new Map();
   let foundEnd = false;
   
-  const dfsRecursive = (row, col) => {
+  const dfsRecursive = async (row, col) => {
     if (foundEnd) return;
     
     const key = `${row},${col}`;
@@ -12,6 +12,10 @@ const dfs = (grid, start, end) => {
     
     visited.add(key);
     visitedNodes.push({ row, col });
+    
+    if (onVisit) {
+      await onVisit({ row, col });
+    }
     
     if (row === end[0] && col === end[1]) {
       foundEnd = true;
@@ -29,13 +33,13 @@ const dfs = (grid, start, end) => {
         const newKey = `${newRow},${newCol}`;
         if (!visited.has(newKey)) {
           parent.set(newKey, { row, col });
-          dfsRecursive(newRow, newCol);
+          await dfsRecursive(newRow, newCol);
         }
       }
     }
   };
   
-  dfsRecursive(start[0], start[1]);
+  await dfsRecursive(start[0], start[1]);
   
   const shortestPath = [];
   if (foundEnd) {

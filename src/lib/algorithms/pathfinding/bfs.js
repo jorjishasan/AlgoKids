@@ -1,4 +1,4 @@
-const bfs = (grid, start, end) => {
+const bfs = async (grid, start, end, onVisit) => {
   const visitedNodes = [];
   const queue = [{ row: start[0], col: start[1], distance: 0 }];
   const visited = new Set();
@@ -11,6 +11,10 @@ const bfs = (grid, start, end) => {
     if (visited.has(key)) continue;
     visited.add(key);
     visitedNodes.push(current);
+    
+    if (onVisit) {
+      await onVisit(current);
+    }
     
     if (current.row === end[0] && current.col === end[1]) {
       const path = [];
