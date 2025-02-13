@@ -28,14 +28,14 @@
   
   .grid-container tr {
     display: flex;
-    height: 35px;
+    margin: 0;
+    padding: 0;
   }
   
   .node {
-    width: 35px;
-    height: 35px;
     border: 1px solid rgba(0, 0, 0, 0.1);
     padding: 0;
+    margin: 0;
     transition: all 0.2s ease-out;
     background: white;
     position: relative;
@@ -118,7 +118,6 @@
     0% {
       transform: scale(0.3);
       background-color: #BEE3F8;
-      border-radius: 100%;
     }
     50% {
       transform: scale(1.2);
@@ -187,15 +186,6 @@
   @media (max-width: 640px) {
     .grid-container {
       padding: 5px;
-    }
-    
-    .node {
-      width: 30px;
-      height: 30px;
-    }
-    
-    .grid-container tr {
-      height: 30px;
     }
   }
   
