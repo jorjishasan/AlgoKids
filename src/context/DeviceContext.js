@@ -6,14 +6,24 @@ const DeviceContext = createContext();
 export const DeviceProvider = ({ children }) => {
   const [deviceInfo, setDeviceInfo] = useState({
     width: typeof window !== 'undefined' ? window.innerWidth : 0,
-    isMobile: typeof window !== 'undefined' ? window.innerWidth <= 768 : false
+    height: typeof window !== 'undefined' ? window.innerHeight : 0,
+    isMobile: typeof window !== 'undefined' ? window.innerWidth <= 768 : false,
+    isLandscape: typeof window !== 'undefined' ? window.innerWidth > window.innerHeight : false,
+    isTablet: typeof window !== 'undefined' ? window.innerWidth <= 1024 && window.innerWidth > 768 : false,
+    aspectRatio: typeof window !== 'undefined' ? window.innerWidth / window.innerHeight : 0,
   });
 
   useEffect(() => {
     const updateDeviceInfo = () => {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
       setDeviceInfo({
-        width: window.innerWidth,
-        isMobile: window.innerWidth <= 768
+        width,
+        height,
+        isMobile: width <= 768,
+        isLandscape: width > height,
+        isTablet: width <= 1024 && width > 768,
+        aspectRatio: width / height,
       });
     };
 
