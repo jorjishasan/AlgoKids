@@ -28,14 +28,14 @@
   
   .grid-container tr {
     display: flex;
-    margin: 0;
-    padding: 0;
+    height: 35px;
   }
   
   .node {
+    width: 35px;
+    height: 35px;
     border: 1px solid rgba(0, 0, 0, 0.1);
     padding: 0;
-    margin: 0;
     transition: all 0.2s ease-out;
     background: white;
     position: relative;
@@ -60,13 +60,37 @@
   }
   
   .node_visited {
-    animation: visitedAnimation 1.5s ease-out forwards;
-    background: #90CDF4;
+    animation: visitedStartNodeBlueAnimation 1.5s ease-out forwards;
+  }
+  
+  .node_visited.node_start {
+    animation: visitedStartNodePurpleAnimation 1.5s ease-out forwards;
   }
   
   .node_path {
-    animation: shortestPathAnimation 1.5s ease-out forwards;
-    background: #F6E05E;
+    animation: shortestPathAnimation 0.5s ease-out forwards;
+    background: linear-gradient(45deg, #FFB4A2, #FFCB77);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .node_path::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+      transparent 0%,
+      rgba(255, 255, 255, 0.4) 50%,
+      transparent 100%
+    );
+    animation: pathFlow 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+  
+  .path-step {
+    animation: pathStepAnimation 0.5s ease-out forwards;
   }
   
   .running-girl {
@@ -76,6 +100,15 @@
     transform: translate(-50%, -50%);
     animation: stepAnimation 0.1s ease-in-out forwards;
     opacity: 0;
+  }
+  
+  @keyframes pathFlow {
+    0% {
+      transform: translateX(-50%) skewX(-15deg);
+    }
+    100% {
+      transform: translateX(50%) skewX(-15deg);
+    }
   }
   
   @keyframes stepAnimation {
@@ -100,6 +133,32 @@
     }
   }
   
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(-3deg); }
+    50% { transform: rotate(3deg); }
+  }
+  
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+  
+  @keyframes target-bounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1) rotate(5deg); }
+  }
+  
+  @keyframes path-step {
+    0% { transform: scale(0) rotate(-180deg); }
+    60% { transform: scale(1.2) rotate(10deg); }
+    100% { transform: scale(1) rotate(0); }
+  }
+  
+  @keyframes ripple {
+    0% { transform: scale(0.5); opacity: 0.5; }
+    100% { transform: scale(1.5); opacity: 0; }
+  }
+  
   @keyframes wallAnimation {
     0% {
       transform: scale(0.3);
@@ -114,34 +173,63 @@
     }
   }
   
-  @keyframes visitedAnimation {
+  @keyframes visitedStartNodePurpleAnimation {
     0% {
-      transform: scale(0.3);
-      background-color: #BEE3F8;
+      transform: scale(.3);
+      background-color: rgba(41, 4, 24, 0.75);
+      border-radius: 100%;
     }
     50% {
+      background-color: rgba(97, 0, 20, 0.75);
+    }
+    75% {
       transform: scale(1.2);
-      background-color: #90CDF4;
+      background-color: rgba(216, 5, 141, 0.75)
     }
     100% {
       transform: scale(1.0);
-      background-color: #90CDF4;
+      background-color: rgba(178, 67, 255, 0.75);
+    }
+  }
+  
+  @keyframes visitedStartNodeBlueAnimation {
+    0% {
+      transform: scale(.3);
+      background-color: rgba(0, 0, 66, 0.75);
+      border-radius: 100%;
+    }
+    50% {
+      background-color: rgba(17, 104, 217, 0.75);
+    }
+    75% {
+      transform: scale(1.2);
+      background-color: rgba(0, 217, 159, 0.75);
+    }
+    100% {
+      transform: scale(1.0);
+      background-color: rgba(148, 251, 237, 0.873);
     }
   }
   
   @keyframes shortestPathAnimation {
     0% {
       transform: scale(0.3);
-      background-color: #FAF089;
+      opacity: 0;
     }
     50% {
       transform: scale(1.2);
-      background-color: #F6E05E;
+      opacity: 0.7;
     }
     100% {
       transform: scale(1.0);
-      background-color: #F6E05E;
+      opacity: 1;
     }
+  }
+  
+  @keyframes celebration {
+    0% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-20px) scale(1.2); }
+    100% { transform: translateY(0) scale(1); }
   }
   
   @keyframes bounceAnimation {
@@ -187,5 +275,39 @@
     .grid-container {
       padding: 5px;
     }
+    
+    .node {
+      width: 30px;
+      height: 30px;
+    }
+    
+    .grid-container tr {
+      height: 30px;
+    }
   }
+  
+  .animate-wiggle {
+    animation: wiggle 1s ease-in-out infinite;
+  }
+  
+  .animate-float {
+    animation: float 2s ease-in-out infinite;
+  }
+  
+  .animate-target-bounce {
+    animation: target-bounce 2s ease-in-out infinite;
+  }
+  
+  .animate-path-step {
+    animation: path-step 0.5s ease-out forwards;
+  }
+  
+  .animate-ripple {
+    animation: ripple 1s ease-out infinite;
+  }
+  
+  .animate-celebration {
+    animation: celebration 0.5s ease-out forwards;
+  }
+  
   
