@@ -37,32 +37,57 @@ export const PathfindingProvider = ({ children }) => {
   const makeGrid = useCallback(() => {
     if (animating) return;
     
-    // Calculate available space
-    const navHeight = 80; // Approximate nav height
-    const padding = deviceInfo.isMobile ? 20 : 40; // Less padding on mobile
-    const availableHeight = window.innerHeight - navHeight - padding;
-    const availableWidth = Math.min(window.innerWidth - padding, 1200); // Max width with padding
+    // Calculate available space with minimal padding
+    const navHeight = 80;
+    const padding = deviceInfo.isMobile ? 16 : 24;
+    const availableHeight = deviceInfo.height - navHeight - padding * 2;
+    const availableWidth = deviceInfo.width - padding * 2;
+
+    // Set minimum and maximum node sizes based on device type
+    const minNodeSize = deviceInfo.isMobile ? 40 : 45;
+    const maxNodeSize = deviceInfo.isMobile ? 60 : 70;
+
+    // Calculate maximum possible nodes that could fit
+    const maxPossibleColumns = Math.floor(availableWidth / minNodeSize);
+    const maxPossibleRows = Math.floor(availableHeight / minNodeSize);
+
+    // Determine optimal grid dimensions based on device characteristics
+    let desiredColumns, desiredRows;
     
-    // Calculate optimal node size based on screen dimensions
-    let nodeSize;
     if (deviceInfo.isMobile) {
-      // For mobile, aim for 12-15 nodes across
-      nodeSize = Math.floor(availableWidth / 12);
+      if (deviceInfo.isLandscape) {
+        // Landscape mobile: wider grid
+        desiredColumns = Math.min(maxPossibleColumns, 12);
+        desiredRows = Math.min(maxPossibleRows, 8);
+      } else {
+        // Portrait mobile: taller grid
+        desiredColumns = Math.min(maxPossibleColumns, 8);
+        desiredRows = Math.min(maxPossibleRows, 12);
+      }
+    } else if (deviceInfo.isTablet) {
+      // Tablets: medium-sized grid
+      desiredColumns = Math.min(maxPossibleColumns, deviceInfo.isLandscape ? 16 : 12);
+      desiredRows = Math.min(maxPossibleRows, deviceInfo.isLandscape ? 10 : 14);
     } else {
-      // For desktop, aim for 20-25 nodes across
-      nodeSize = Math.floor(availableWidth / 20);
+      // Desktop: larger grid
+      desiredColumns = Math.min(maxPossibleColumns, deviceInfo.isLandscape ? 20 : 16);
+      desiredRows = Math.min(maxPossibleRows, deviceInfo.isLandscape ? 12 : 16);
     }
+
+    // Calculate node size to fill available space
+    const nodeSize = Math.min(
+      Math.floor(availableWidth / desiredColumns),
+      Math.floor(availableHeight / desiredRows),
+      maxNodeSize
+    );
+
+    // Recalculate final dimensions to fill space optimally
+    const finalColumns = Math.floor(availableWidth / nodeSize);
+    const finalRows = Math.floor(availableHeight / nodeSize);
     
-    // Ensure minimum and maximum node sizes
-    nodeSize = Math.max(Math.min(nodeSize, 50), 30); // Min 30px, Max 50px
-    
-    // Calculate grid dimensions
-    let row_size = Math.floor(availableHeight / nodeSize);
-    let col_size = Math.floor(availableWidth / nodeSize);
-    
-    // Ensure minimum sizes for usability
-    row_size = Math.min(Math.max(row_size, 8), deviceInfo.isMobile ? 15 : 20); // Fewer rows on mobile
-    col_size = Math.min(Math.max(col_size, 8), deviceInfo.isMobile ? 12 : 25); // Fewer columns on mobile
+    // Use the calculated dimensions
+    const row_size = Math.min(desiredRows, finalRows);
+    const col_size = Math.min(desiredColumns, finalColumns);
     
     let arr = [];
     for (let i = 0; i < row_size; i++) {
@@ -83,11 +108,11 @@ export const PathfindingProvider = ({ children }) => {
       arr.push(row);
     }
     
-    // Place start and end nodes with some minimum distance
-    let start_x = Math.floor(row_size / 4);
-    let start_y = Math.floor(col_size / 4);
-    let end_x = Math.floor(3 * row_size / 4);
-    let end_y = Math.floor(3 * col_size / 4);
+    // Place start and end nodes with proportional spacing
+    const start_x = Math.floor(row_size / 4);
+    const start_y = Math.floor(col_size / 4);
+    const end_x = Math.floor(3 * row_size / 4);
+    const end_y = Math.floor(3 * col_size / 4);
     
     arr[start_x][start_y].isStart = true;
     arr[end_x][end_y].isEnd = true;
@@ -100,9 +125,9 @@ export const PathfindingProvider = ({ children }) => {
       number_of_nodes: arr.length * arr[0].length,
       visited: 0,
       shortestPath: 0,
-      nodeSize // Store the calculated node size in state
+      nodeSize
     }));
-  }, [deviceInfo.isMobile, deviceInfo.width]); // Add deviceInfo dependencies
+  }, [deviceInfo.width, deviceInfo.height, deviceInfo.isMobile, deviceInfo.isTablet, deviceInfo.isLandscape]);
 
   const handleMouseDown = (row, col) => {
     if (animating) return;
