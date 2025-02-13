@@ -11,10 +11,10 @@ const Stats = () => {
     if (state.currentPath?.length > 0) {
       // Wait for the path animation to complete
       // Assuming each step takes 0.1s (as per Node.js animation)
-      const animationDelay = state.currentPath.length * 0.1 * 1000;
+      const animationDelay = state.currentPath.length * 0.1 * 600;
       const timer = setTimeout(() => {
         setShowStats(true);
-      }, animationDelay + 500); // Add extra 500ms buffer
+      }, animationDelay); 
 
       return () => clearTimeout(timer);
     } else {
