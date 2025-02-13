@@ -2,6 +2,9 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
 import Dijkstra from '../lib/algorithms/pathfinding/dijkstra';
 import astar from '../lib/algorithms/pathfinding/astar';
+import bfs from '../lib/algorithms/pathfinding/bfs';
+import dfs from '../lib/algorithms/pathfinding/dfs';
+import { useDevice } from './DeviceContext';
 
 const PathfindingContext = createContext();
 
@@ -14,8 +17,9 @@ export const usePathfinding = () => {
 };
 
 export const PathfindingProvider = ({ children }) => {
+  const deviceInfo = useDevice();
   const [state, setState] = useState({
-    method: "A* Search",
+    method: "Dijkstra's Algorithm",
     grid: [],
     mouseClicked: false,
     mainClicked: "",
@@ -23,15 +27,43 @@ export const PathfindingProvider = ({ children }) => {
     end_node: null,
     visited: 0,
     shortestPath: 0,
-    number_of_nodes: 0
+    number_of_nodes: 0,
+    currentPath: null,
+    isRunning: false
   });
 
   let animating = false;
 
   const makeGrid = useCallback(() => {
     if (animating) return;
-    let row_size = Math.floor((window.innerHeight - 60) / 27);
-    let col_size = Math.floor((window.innerWidth) / 27);
+    
+    // Calculate available space
+    const navHeight = 80; // Approximate nav height
+    const padding = deviceInfo.isMobile ? 20 : 40; // Less padding on mobile
+    const availableHeight = window.innerHeight - navHeight - padding;
+    const availableWidth = Math.min(window.innerWidth - padding, 1200); // Max width with padding
+    
+    // Calculate optimal node size based on screen dimensions
+    let nodeSize;
+    if (deviceInfo.isMobile) {
+      // For mobile, aim for 12-15 nodes across
+      nodeSize = Math.floor(availableWidth / 12);
+    } else {
+      // For desktop, aim for 20-25 nodes across
+      nodeSize = Math.floor(availableWidth / 20);
+    }
+    
+    // Ensure minimum and maximum node sizes
+    nodeSize = Math.max(Math.min(nodeSize, 50), 30); // Min 30px, Max 50px
+    
+    // Calculate grid dimensions
+    let row_size = Math.floor(availableHeight / nodeSize);
+    let col_size = Math.floor(availableWidth / nodeSize);
+    
+    // Ensure minimum sizes for usability
+    row_size = Math.min(Math.max(row_size, 8), deviceInfo.isMobile ? 15 : 20); // Fewer rows on mobile
+    col_size = Math.min(Math.max(col_size, 8), deviceInfo.isMobile ? 12 : 25); // Fewer columns on mobile
+    
     let arr = [];
     for (let i = 0; i < row_size; i++) {
       let row = [];
@@ -50,10 +82,13 @@ export const PathfindingProvider = ({ children }) => {
       }
       arr.push(row);
     }
-    let start_x = Math.floor(Math.random() * row_size);
-    let start_y = Math.floor(Math.random() * col_size);
-    let end_x = Math.floor(Math.random() * row_size);
-    let end_y = Math.floor(Math.random() * col_size);
+    
+    // Place start and end nodes with some minimum distance
+    let start_x = Math.floor(row_size / 4);
+    let start_y = Math.floor(col_size / 4);
+    let end_x = Math.floor(3 * row_size / 4);
+    let end_y = Math.floor(3 * col_size / 4);
+    
     arr[start_x][start_y].isStart = true;
     arr[end_x][end_y].isEnd = true;
 
@@ -64,9 +99,10 @@ export const PathfindingProvider = ({ children }) => {
       end_node: [end_x, end_y],
       number_of_nodes: arr.length * arr[0].length,
       visited: 0,
-      shortestPath: 0
+      shortestPath: 0,
+      nodeSize // Store the calculated node size in state
     }));
-  }, []);
+  }, [deviceInfo.isMobile, deviceInfo.width]); // Add deviceInfo dependencies
 
   const handleMouseDown = (row, col) => {
     if (animating) return;
@@ -143,8 +179,13 @@ export const PathfindingProvider = ({ children }) => {
   };
 
   const visualizePathfinding = async (e) => {
-    e.preventDefault();
-    if (animating) return;
+    if (e?.preventDefault) {
+      e.preventDefault();
+    }
+    if (state.isRunning) return;
+    
+    setState(prev => ({ ...prev, isRunning: true }));
+    
     let arr = [...state.grid];
     
     // Clear previous visualization
@@ -160,63 +201,67 @@ export const PathfindingProvider = ({ children }) => {
       }
     }
 
+    // Real-time visualization callback
+    const onVisit = async (node) => {
+      if (!arr[node.row][node.col].isStart && !arr[node.row][node.col].isEnd) {
+        arr[node.row][node.col].isVisited = true;
+        const domNode = document.getElementById(`node-${node.row}-${node.col}`);
+        domNode.className = 'node node_visited';
+        await new Promise(resolve => setTimeout(resolve, 5));
+      }
+    };
+
     let result;
     try {
-      if (state.method === "Dijkstra's Algorithm") {
-        result = Dijkstra(arr, state.start_node, state.end_node);
-      } else {
-        result = astar(arr, state.start_node, state.end_node);
+      switch(state.method) {
+        case "Dijkstra's Algorithm":
+          result = await Dijkstra(arr, state.start_node, state.end_node, onVisit);
+          break;
+        case "A* Search":
+          result = await astar(arr, state.start_node, state.end_node, onVisit);
+          break;
+        case "Breadth First Search":
+          result = await bfs(arr, state.start_node, state.end_node, onVisit);
+          break;
+        case "Depth First Search":
+          result = await dfs(arr, state.start_node, state.end_node, onVisit);
+          break;
+        default:
+          result = await Dijkstra(arr, state.start_node, state.end_node, onVisit);
       }
     } catch (error) {
       console.error("Error finding path:", error);
+      setState(prev => ({ ...prev, isRunning: false }));
       return;
     }
 
     if (!result || !result.visitedNodes || !result.shortestPath) {
       console.log("No path found!");
+      setState(prev => ({ ...prev, isRunning: false }));
       return;
     }
 
     const { visitedNodes, shortestPath } = result;
 
-    const animate = async () => {
-      animating = true;
-
-      // Animate visited nodes in real-time
-      for (let i = 0; i < visitedNodes.length; i++) {
-        const node = visitedNodes[i];
-        arr[node.row][node.col].isVisited = true;
+    // Animate shortest path
+    for (let i = 0; i < shortestPath.length; i++) {
+      const node = shortestPath[i];
+      arr[node.row][node.col].isShortestPath = true;
+      if (!arr[node.row][node.col].isStart && !arr[node.row][node.col].isEnd) {
         const domNode = document.getElementById(`node-${node.row}-${node.col}`);
-        
-        if (!arr[node.row][node.col].isStart && !arr[node.row][node.col].isEnd) {
-          domNode.className = 'node node_visited';
-          await new Promise(resolve => setTimeout(resolve, 10)); // Shorter delay for real-time feel
-        }
+        domNode.className = 'node node_path';
+        await new Promise(resolve => setTimeout(resolve, 30));
       }
+    }
 
-      // Mark and animate shortest path
-      for (let i = 0; i < shortestPath.length; i++) {
-        const node = shortestPath[i];
-        arr[node.row][node.col].isShortestPath = true;
-        const domNode = document.getElementById(`node-${node.row}-${node.col}`);
-        
-        if (!arr[node.row][node.col].isStart && !arr[node.row][node.col].isEnd) {
-          domNode.className = 'node node_path';
-          await new Promise(resolve => setTimeout(resolve, 30));
-        }
-      }
-
-      setState(prev => ({
-        ...prev,
-        grid: arr,
-        visited: visitedNodes.length,
-        shortestPath: shortestPath.length
-      }));
-      
-      animating = false;
-    };
-
-    animate();
+    setState(prev => ({
+      ...prev,
+      grid: arr,
+      visited: visitedNodes.length,
+      shortestPath: shortestPath.length,
+      currentPath: shortestPath,
+      isRunning: false
+    }));
   };
 
   const setMethod = (method) => {
@@ -239,4 +284,6 @@ export const PathfindingProvider = ({ children }) => {
       {children}
     </PathfindingContext.Provider>
   );
-}; 
+};
+
+export default PathfindingProvider; 
