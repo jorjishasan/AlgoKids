@@ -18,19 +18,17 @@ const Node = ({
   totalPath
 }) => {
   const { state } = usePathfinding();
-  const nodeSize = state.nodeSize || 35; // Fallback to 35px if not set
+  const nodeSize = state.nodeSize || 45;
   
   let cName = "node";
   
-  // Order matters! We want to show the shortest path over visited nodes
   if (isStart) cName += " node_start";
   else if (isEnd) cName += " node_end";
   else if (isWall) cName += " node_wall";
   else if (isShortestPath) cName += " node_path";
   else if (isVisited) cName += " node_visited";
 
-  // Calculate animation delay based on path index
-  const animationDelay = pathIndex * 0.1; // 0.1s delay between each step
+  const animationDelay = pathIndex * 0.1;
 
   return (
     <td 
@@ -45,51 +43,76 @@ const Node = ({
         height: `${nodeSize}px`,
         padding: 0,
         cursor: 'pointer',
-        transition: 'all 0.3s ease',
+        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         position: 'relative',
-        borderRadius: '4px',
         border: '1px solid rgba(0, 0, 0, 0.1)',
         background: 'white',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+        margin: 0,
+        borderRadius: 0,
+        '&:hover': {
+          transform: 'scale(1.05)',
+          boxShadow: '0 4px 8px rgba(0,0,0,0.15)',
+          zIndex: 10
+        }
       }}
     >
       {isStart && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <Image
-            src="/startPoint.png"
-            alt="Start"
-            width={nodeSize * 0.7}
-            height={nodeSize * 0.7}
-            className="pointer-events-none"
-          />
+        <div className="absolute inset-0 flex items-center justify-center animate-pulse">
+          <div className="relative w-[95%] h-[95%]">
+            <Image
+              src="/startPoint.png"
+              alt="Start"
+              fill
+              style={{ 
+                objectFit: 'contain',
+                filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))'
+              }}
+              className="pointer-events-none"
+              priority
+            />
+          </div>
         </div>
       )}
       {isEnd && (
-        <div className="absolute inset-0 flex items-center justify-center">
-          <Image
-            src="/targetPoint.png"
-            alt="Target"
-            width={nodeSize * 0.7}
-            height={nodeSize * 0.7}
-            className="pointer-events-none"
-          />
+        <div className="absolute inset-0 flex items-center justify-center animate-bounce">
+          <div className="relative w-[95%] h-[95%]">
+            <Image
+              src="/targetPoint.png"
+              alt="Target"
+              fill
+              style={{ 
+                objectFit: 'contain',
+                filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))'
+              }}
+              className="pointer-events-none"
+              priority
+            />
+          </div>
         </div>
       )}
       {isShortestPath && !isStart && !isEnd && pathIndex !== undefined && (
         <div 
-          className="running-girl"
+          className="running-girl absolute inset-0 flex items-center justify-center"
           style={{
             animationDelay: `${animationDelay}s`,
             opacity: 0,
             animationFillMode: 'forwards'
           }}
         >
-          <Image
-            src="/startPoint.png"
-            alt="Running"
-            width={nodeSize * 0.6}
-            height={nodeSize * 0.6}
-            className="pointer-events-none"
-          />
+          <div className="relative w-[90%] h-[90%]">
+            <Image
+              src="/startPoint.png"
+              alt="Running"
+              fill
+              style={{ 
+                objectFit: 'contain',
+                filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))'
+              }}
+              className="pointer-events-none"
+              priority
+            />
+          </div>
         </div>
       )}
     </td>
