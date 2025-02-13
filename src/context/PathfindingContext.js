@@ -4,6 +4,9 @@ import Dijkstra from '../lib/algorithms/pathfinding/dijkstra';
 import astar from '../lib/algorithms/pathfinding/astar';
 import bfs from '../lib/algorithms/pathfinding/bfs';
 import dfs from '../lib/algorithms/pathfinding/dfs';
+import swarm from '../lib/algorithms/pathfinding/swarm';
+import convergentSwarm from '../lib/algorithms/pathfinding/convergentSwarm';
+import bidirectionalSwarm from '../lib/algorithms/pathfinding/bidirectionalSwarm';
 import { useDevice } from './DeviceContext';
 
 const PathfindingContext = createContext();
@@ -39,13 +42,13 @@ export const PathfindingProvider = ({ children }) => {
     
     // Calculate available space with minimal padding
     const navHeight = 80;
-    const padding = deviceInfo.isMobile ? 16 : 24;
+    const padding = deviceInfo.isMobile ? 16 : 32;
     const availableHeight = deviceInfo.height - navHeight - padding * 2;
     const availableWidth = deviceInfo.width - padding * 2;
 
     // Set minimum and maximum node sizes based on device type
-    const minNodeSize = deviceInfo.isMobile ? 40 : 45;
-    const maxNodeSize = deviceInfo.isMobile ? 60 : 70;
+    const minNodeSize = deviceInfo.isMobile ? 35 : 40;
+    const maxNodeSize = deviceInfo.isMobile ? 50 : 60;
 
     // Calculate maximum possible nodes that could fit
     const maxPossibleColumns = Math.floor(availableWidth / minNodeSize);
@@ -57,21 +60,21 @@ export const PathfindingProvider = ({ children }) => {
     if (deviceInfo.isMobile) {
       if (deviceInfo.isLandscape) {
         // Landscape mobile: wider grid
-        desiredColumns = Math.min(maxPossibleColumns, 12);
-        desiredRows = Math.min(maxPossibleRows, 8);
+        desiredColumns = Math.min(maxPossibleColumns, 20);
+        desiredRows = Math.min(maxPossibleRows, 10);
       } else {
         // Portrait mobile: taller grid
-        desiredColumns = Math.min(maxPossibleColumns, 8);
-        desiredRows = Math.min(maxPossibleRows, 12);
+        desiredColumns = Math.min(maxPossibleColumns, 12);
+        desiredRows = Math.min(maxPossibleRows, 16);
       }
     } else if (deviceInfo.isTablet) {
       // Tablets: medium-sized grid
-      desiredColumns = Math.min(maxPossibleColumns, deviceInfo.isLandscape ? 16 : 12);
-      desiredRows = Math.min(maxPossibleRows, deviceInfo.isLandscape ? 10 : 14);
+      desiredColumns = Math.min(maxPossibleColumns, deviceInfo.isLandscape ? 25 : 20);
+      desiredRows = Math.min(maxPossibleRows, deviceInfo.isLandscape ? 14 : 18);
     } else {
       // Desktop: larger grid
-      desiredColumns = Math.min(maxPossibleColumns, deviceInfo.isLandscape ? 20 : 16);
-      desiredRows = Math.min(maxPossibleRows, deviceInfo.isLandscape ? 12 : 16);
+      desiredColumns = Math.min(maxPossibleColumns, deviceInfo.isLandscape ? 35 : 30);
+      desiredRows = Math.min(maxPossibleRows, deviceInfo.isLandscape ? 16 : 20);
     }
 
     // Calculate node size to fill available space
@@ -250,6 +253,15 @@ export const PathfindingProvider = ({ children }) => {
           break;
         case "Depth First Search":
           result = await dfs(arr, state.start_node, state.end_node, onVisit);
+          break;
+        case "Swarm Algorithm":
+          result = await swarm(arr, state.start_node, state.end_node, onVisit);
+          break;
+        case "Convergent Swarm":
+          result = await convergentSwarm(arr, state.start_node, state.end_node, onVisit);
+          break;
+        case "Bidirectional Swarm":
+          result = await bidirectionalSwarm(arr, state.start_node, state.end_node, onVisit);
           break;
         default:
           result = await Dijkstra(arr, state.start_node, state.end_node, onVisit);
