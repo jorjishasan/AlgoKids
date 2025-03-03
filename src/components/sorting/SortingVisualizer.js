@@ -63,7 +63,7 @@ const SortingVisualizer = () => {
         ].map(({ color, text }) => (
           <motion.div
             key={text}
-            className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-full"
+            className="flex items-center gap-1 px-2 "
             whileHover={{ scale: 1.05 }}
           >
             <div className={`w-4 h-4 rounded-sm ${color}`} />

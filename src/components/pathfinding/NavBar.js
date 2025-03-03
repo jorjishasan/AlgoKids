@@ -6,7 +6,7 @@ import { usePathfinding } from '@/context/PathfindingContext';
 import { pathfindingAlgorithmConfig } from '@/config/algorithmConfig';
 import CubeLogo from '@/components/icons/CubeLogo';
 import PlayIcon from '@/components/icons/PlayIcon';
-import CaretIcon from '@/components/icons/CaretIcon';
+import Button from '@/components/common/Button';
 import HamburgerMenu from '@/components/icons/HamburgerMenu';
 import MobileMenu from './MobileMenu';
 
@@ -15,21 +15,19 @@ const AlgorithmSelector = ({ method, setMethod, isRunning }) => {
   
   return (
     <div className="relative">
-      <motion.button
+      <Button
+        variant="dropdown"
         onClick={() => !isRunning && setIsOpen(!isOpen)}
-        className={`bg-white/10 text-white px-6 py-2.5 rounded-xl font-medium transition-all
-          flex items-center gap-3 min-w-[200px]
-          ${isRunning ? 'opacity-50 cursor-not-allowed' : 'hover:bg-white/20 hover:shadow-lg hover:shadow-white/10'}`}
-        whileHover={!isRunning ? { scale: 1.02 } : {}}
-        whileTap={!isRunning ? { scale: 0.98 } : {}}
         disabled={isRunning}
+        showCaret
+        isCaretOpen={isOpen}
+        className="min-w-[200px]"
       >
         <span className="text-xl">
           {pathfindingAlgorithmConfig.algorithms.find(algo => algo.name === method)?.icon}
         </span>
         <span className="flex-1 text-left">{method}</span>
-        <CaretIcon isOpen={isOpen} />
-      </motion.button>
+      </Button>
 
       <AnimatePresence>
         {isOpen && (
@@ -104,37 +102,26 @@ const NavBar = () => {
                   isRunning={state.isRunning} 
                 />
 
-                <motion.button 
-                  className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-white font-medium 
-                    ${state.isRunning 
-                      ? 'bg-gray-600 cursor-not-allowed opacity-50' 
-                      : 'bg-white/10 hover:bg-white/20 hover:shadow-lg hover:shadow-white/10'
-                    }`}
+                <Button
+                  variant="ghost"
                   onClick={makeGrid}
                   disabled={state.isRunning}
-                  whileHover={{ scale: state.isRunning ? 1 : 1.05 }}
-                  whileTap={{ scale: state.isRunning ? 1 : 0.95 }}
                 >
                   Clear Board
-                </motion.button>
+                </Button>
               </div>
             </div>
 
             <div className="flex items-center gap-4">
-              <motion.button 
-                className={`hidden md:flex items-center gap-2 px-6 py-2.5 rounded-xl text-white font-medium 
-                  ${state.isRunning 
-                    ? 'bg-gray-600 cursor-not-allowed opacity-50' 
-                    : 'bg-green-400 hover:bg-green-500 hover:shadow-lg hover:shadow-green-400/20'
-                  }`}
+              <Button
+                variant="primary"
                 onClick={visualizePathfinding}
                 disabled={state.isRunning}
-                whileHover={{ scale: state.isRunning ? 1 : 1.05 }}
-                whileTap={{ scale: state.isRunning ? 1 : 0.95 }}
+                icon={<PlayIcon className="w-5 h-5" />}
+                isHidden
               >
-                <PlayIcon className="w-5 h-5" />
                 <span className="font-semibold">Find Path</span>
-              </motion.button>
+              </Button>
 
               <motion.button
                 className="md:hidden relative z-50 flex h-12 w-12 items-center justify-center rounded-full 

@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { sortingAlgorithmConfig } from '@/config/algorithmConfig';
-import CaretIcon from '@/components/icons/CaretIcon';
+import Button from '@/components/common/Button';
 
 const AlgorithmSelector = ({ method, setMethod, isRunning }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,25 +28,18 @@ const AlgorithmSelector = ({ method, setMethod, isRunning }) => {
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <motion.button
+      <Button
+        variant="dropdown"
         onClick={() => setIsOpen(!isOpen)}
         disabled={isRunning}
-        className="flex items-center gap-3 bg-white/10 hover:bg-white/15 
-          text-white font-bold px-5 py-3 rounded-2xl transition-all duration-200
-          shadow-lg border-2 border-white/20 disabled:opacity-50 disabled:cursor-not-allowed"
-        whileHover={{ scale: isRunning ? 1 : 1.05 }}
-        whileTap={{ scale: isRunning ? 1 : 0.95 }}
+        showCaret
+        isCaretOpen={isOpen}
+        className="rounded-full"
       >
-        <span >
+        <span>
           {sortingAlgorithmConfig.algorithms.find(algo => algo.name === method)?.icon} {method}
         </span>
-        <motion.span
-          animate={{ rotate: isOpen ? 180 : 0 }}
-          transition={{ duration: 0.2 }}
-        >
-          <CaretIcon />
-        </motion.span>
-      </motion.button>
+      </Button>
 
       <AnimatePresence>
         {isOpen && (

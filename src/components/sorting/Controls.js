@@ -2,7 +2,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect, useRef } from 'react';
 import { sortingAlgorithmConfig } from '@/config/algorithmConfig';
-import CaretIcon from '@/components/icons/CaretIcon';
+import Button from '@/components/common/Button';
 import { useSorting } from '@/context/SortingContext';
 
 const Controls = ({ isRunning }) => {
@@ -41,22 +41,15 @@ const Controls = ({ isRunning }) => {
 
   return (
     <div className="relative" ref={controlsRef}>
-      <motion.button
-        whileHover={{ scale: isRunning ? 1 : 1.05 }}
-        whileTap={{ scale: isRunning ? 1 : 0.95 }}
+      <Button
+        variant="dropdown"
         onClick={() => !isRunning && setShowControls(!showControls)}
-        className={`flex items-center gap-2 px-4 py-2 bg-white/5 hover:bg-white/10 
-          text-white font-bold rounded-xl transition-colors ${isRunning ? 'opacity-50 cursor-not-allowed' : ''}`}
         disabled={isRunning}
+        showCaret
+        isCaretOpen={showControls}
       >
-        <span>⚙️ Settings</span>
-        <motion.span
-          animate={{ rotate: showControls ? 180 : 0 }}
-          transition={{ duration: 0.2 }}
-        >
-          <CaretIcon />
-        </motion.span>
-      </motion.button>
+        🎮 Settings
+      </Button>
 
       <AnimatePresence>
         {!isRunning && showControls && (
@@ -64,23 +57,23 @@ const Controls = ({ isRunning }) => {
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="absolute z-50 mt-2 w-64 p-4 rounded-xl bg-white/10 backdrop-blur-sm 
-              shadow-xl border border-white/20"
+            className="absolute z-50 mt-2 w-72 p-6 rounded-2xl bg-gradient-to-br from-blue-400/95 to-purple-400/95 
+              backdrop-blur-md shadow-xl border-2 border-white/20"
           >
-            <div className="space-y-6">
+            <div className="space-y-8">
               <div>
-                <div className="flex justify-between items-center mb-2">
-                  <label className="block text-white font-bold">
-                    Array Size
+                <div className="flex justify-between items-center mb-3">
+                  <label className="block text-white text-lg font-bold">
+                    🎲 Array Size
                   </label>
-                  <span className="text-xs text-white">
+                  <span className="text-sm text-white/80 font-medium px-2 py-1 bg-white/10 rounded-full">
                     max: {maxBars}
                   </span>
                 </div>
                 <div className="relative pt-1">
                   <div className="relative">
                     <div 
-                      className="absolute bottom-2 h-2 bg-purple-400 rounded-lg"
+                      className="absolute bottom-2 h-3 bg-yellow-400 rounded-full shadow-lg shadow-yellow-400/30"
                       style={{
                         width: `${((arrayLength - sortingAlgorithmConfig.array.minSize) / 
                           (maxBars - sortingAlgorithmConfig.array.minSize)) * 100}%`
@@ -93,28 +86,28 @@ const Controls = ({ isRunning }) => {
                       value={arrayLength}
                       onChange={handleArraySizeChange}
                       disabled={isRunning}
-                      className="relative w-full h-2 bg-white/40 rounded-lg appearance-none cursor-pointer
-                        [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 
-                        [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:rounded-full 
+                      className="relative w-full h-3 bg-white/20 rounded-full appearance-none cursor-pointer
+                        [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-7 
+                        [&::-webkit-slider-thumb]:h-7 [&::-webkit-slider-thumb]:rounded-full 
                         [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:cursor-pointer
-                        [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-purple-400
-                        disabled:opacity-50"
+                        [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-yellow-400
+                        [&::-webkit-slider-thumb]:shadow-lg disabled:opacity-50"
                     />
                   </div>
-                  <div className="flex justify-between mt-1">
-                    <span className="text-xs text-black/50">{arrayLength} items</span>
+                  <div className="flex justify-between mt-2">
+                    <span className="text-sm text-white/80 font-medium">{arrayLength} blocks</span>
                   </div>
                 </div>
               </div>
 
               <div>
-                <label className="block text-white font-bold mb-2">
-                  Speed
+                <label className="block text-white text-lg font-bold mb-3">
+                  ⚡ Speed
                 </label>
                 <div className="relative pt-1">
                   <div className="relative">
                     <div 
-                      className="absolute bottom-2 h-2 bg-purple-400 rounded-lg"
+                      className="absolute bottom-2 h-3 bg-green-400 rounded-full shadow-lg shadow-green-400/30"
                       style={{
                         width: `${((speed - sortingAlgorithmConfig.speed.min) / 
                           (sortingAlgorithmConfig.speed.max - sortingAlgorithmConfig.speed.min)) * 100}%`
@@ -128,16 +121,16 @@ const Controls = ({ isRunning }) => {
                       value={speed}
                       onChange={handleSpeedChange}
                       disabled={isRunning}
-                      className="relative w-full h-2 bg-white/40 rounded-lg appearance-none cursor-pointer
-                        [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 
-                        [&::-webkit-slider-thumb]:h-6 [&::-webkit-slider-thumb]:rounded-full 
+                      className="relative w-full h-3 bg-white/20 rounded-full appearance-none cursor-pointer
+                        [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-7 
+                        [&::-webkit-slider-thumb]:h-7 [&::-webkit-slider-thumb]:rounded-full 
                         [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:cursor-pointer
-                        [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-purple-400
-                        disabled:opacity-50"
+                        [&::-webkit-slider-thumb]:border-4 [&::-webkit-slider-thumb]:border-green-400
+                        [&::-webkit-slider-thumb]:shadow-lg disabled:opacity-50"
                     />
                   </div>
-                  <div className="flex justify-between mt-1">
-                    <span className="text-xs text-black/50">{speed}ms delay</span>
+                  <div className="flex justify-between mt-2">
+                    <span className="text-sm text-white/80 font-medium">{speed}ms delay</span>
                   </div>
                 </div>
               </div>

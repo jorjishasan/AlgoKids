@@ -15,12 +15,12 @@ const InfoDrawerMobile = ({ isOpen, onClose }) => {
           animate={{ y: 0 }}
           exit={{ y: '100%' }}
           transition={{ type: "spring", damping: 20 }}
-          className="fixed inset-x-0 bottom-0 z-50 bg-gradient-to-b from-blue-400 to-purple-400 
-            rounded-t-3xl shadow-lg pb-8 pt-6 px-4 max-h-[80vh]"
+          className="fixed inset-x-0 bottom-0 z-50 bg-gradient-to-b from-blue-500 via-blue-400 to-purple-500 
+            rounded-t-3xl shadow-2xl pb-8 pt-8 px-6 max-h-[85vh] overflow-y-auto border-t-4 border-blue-600"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Pull Indicator */}
-          <div className="absolute top-2 left-1/2 -translate-x-1/2">
+          <div className="absolute top-3 left-1/2 -translate-x-1/2">
             <div className="w-12 h-1.5 bg-white/30 rounded-full" />
           </div>
 
@@ -29,73 +29,97 @@ const InfoDrawerMobile = ({ isOpen, onClose }) => {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={onClose}
-            className="absolute top-4 right-6 text-white text-2xl font-bold"
+            className="absolute top-6 right-6 w-10 h-10 bg-white/10 rounded-full flex items-center justify-center
+              text-white text-2xl font-bold hover:bg-white/20 transition-colors border-2 border-white/20"
           >
             ×
           </motion.button>
 
           {/* Content */}
-          <div className="overflow-y-auto h-full">
-            <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
-              {algorithmInfo?.icon} {method}
-            </h2>
+          <div className="mt-4">
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-2xl font-bold mb-6 flex items-center gap-3 text-white"
+            >
+              <span className="text-3xl">{algorithmInfo?.icon}</span>
+              <span className="drop-shadow-lg">{method}</span>
+            </motion.h2>
 
             <div className="space-y-6">
               {/* Description */}
-              <div>
-                <h3 className="text-lg font-semibold text-white mb-2">Description</h3>
-                <p className="text-white/90">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="bg-white/10 backdrop-blur-sm rounded-2xl p-5 border-2 border-white/20"
+              >
+                <h3 className="text-lg font-bold mb-3 text-white">📖 How it Works</h3>
+                <p className="text-white/90 leading-relaxed text-sm">
                   {algorithmInfo?.complexity.description}
                 </p>
-              </div>
+              </motion.div>
 
               {/* Time Complexity */}
-              <div>
-                <h3 className="text-lg font-semibold text-white mb-4">Time Complexity</h3>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                <h3 className="text-lg font-bold mb-4 text-white">⚡ Time Complexity</h3>
                 <div className="grid grid-cols-3 gap-3">
-                  {/* Best Case Card */}
-                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 flex flex-col items-center">
-                    <span className="text-white/90 text-sm mb-2">Best Case</span>
-                    <span className="font-mono text-white text-lg font-semibold">
-                      {algorithmInfo?.complexity.time.best}
-                    </span>
-                  </div>
-                  
-                  {/* Average Case Card */}
-                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 flex flex-col items-center">
-                    <span className="text-white/90 text-sm mb-2">Average Case</span>
-                    <span className="font-mono text-white text-lg font-semibold">
-                      {algorithmInfo?.complexity.time.average}
-                    </span>
-                  </div>
-                  
-                  {/* Worst Case Card */}
-                  <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 flex flex-col items-center">
-                    <span className="text-white/90 text-sm mb-2">Worst Case</span>
-                    <span className="font-mono text-white text-lg font-semibold">
-                      {algorithmInfo?.complexity.time.worst}
-                    </span>
-                  </div>
+                  <motion.div 
+                    className="bg-white/10 backdrop-blur-sm p-3 rounded-2xl border-2 border-white/20"
+                    whileHover={{ y: -5 }}
+                  >
+                    <h4 className="font-bold mb-2 text-white text-sm">Best Case</h4>
+                    <p className="text-green-400 font-mono font-bold text-sm">{algorithmInfo?.complexity.time.best}</p>
+                  </motion.div>
+                  <motion.div 
+                    className="bg-white/10 backdrop-blur-sm p-3 rounded-2xl border-2 border-white/20"
+                    whileHover={{ y: -5 }}
+                  >
+                    <h4 className="font-bold mb-2 text-white text-sm">Average</h4>
+                    <p className="text-yellow-400 font-mono font-bold text-sm">{algorithmInfo?.complexity.time.average}</p>
+                  </motion.div>
+                  <motion.div 
+                    className="bg-white/10 backdrop-blur-sm p-3 rounded-2xl border-2 border-white/20"
+                    whileHover={{ y: -5 }}
+                  >
+                    <h4 className="font-bold mb-2 text-white text-sm">Worst Case</h4>
+                    <p className="text-red-400 font-mono font-bold text-sm">{algorithmInfo?.complexity.time.worst}</p>
+                  </motion.div>
                 </div>
-              </div>
+              </motion.div>
 
               {/* Space Complexity */}
-              <div>
-                <h3 className="text-lg font-semibold text-white mb-4">Space Complexity</h3>
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 flex flex-col items-center">
-                  <span className="font-mono text-white text-xl font-semibold">
-                    {algorithmInfo?.complexity.space}
-                  </span>
-                </div>
-              </div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="bg-white/10 backdrop-blur-sm p-5 rounded-2xl border-2 border-white/20"
+                whileHover={{ y: -5 }}
+              >
+                <h3 className="text-lg font-bold mb-3 text-white">💾 Space Complexity</h3>
+                <p className="text-blue-400 font-mono font-bold">{algorithmInfo?.complexity.space}</p>
+              </motion.div>
 
               {/* Stability */}
-              <div>
-                <h3 className="text-lg font-semibold text-white mb-2">Stability</h3>
-                <p className="text-white/90">
-                  This algorithm is {algorithmInfo?.complexity.stable ? "stable" : "not stable"}.
-                </p>
-              </div>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+                className="bg-white/10 backdrop-blur-sm p-5 rounded-2xl border-2 border-white/20"
+                whileHover={{ y: -5 }}
+              >
+                <h3 className="text-lg font-bold mb-3 text-white">🎯 Stability</h3>
+                <div className="flex items-center gap-3">
+                  <div className={`w-3 h-3 rounded-full ${algorithmInfo?.complexity.stable ? 'bg-green-400' : 'bg-red-400'}`} />
+                  <p className="text-white/90 font-bold text-sm">
+                    This algorithm {algorithmInfo?.complexity.stable ? "maintains" : "does not maintain"} the relative order of equal elements.
+                  </p>
+                </div>
+              </motion.div>
             </div>
           </div>
         </motion.div>
